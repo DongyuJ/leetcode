@@ -1,0 +1,45 @@
+//Jul/24/2018 ac
+//一开始没有看出二分，但是其实这种枚举可以解决的问题最直接的优化就是使用二分了
+//这里有一个关键点，在二分查找的时候是逼近正好满足条件的值，所以舍弃右半边的时候不能舍弃中间点，
+//不然有可能因为当前中点正好是答案而被舍弃。
+
+class Solution {
+public:
+    bool isAte(int speed, int H, vector<int>& piles)
+    {
+        int h = 0;
+        for(int i = 0; i < piles.size(); i++)
+        {
+            h += ceil((float)piles[i] / speed);   
+        }
+        if(h > H)
+        {
+            return false;
+        }
+        return true;
+    }
+    int binarySearch(int left, int right, int H, vector<int>& piles)
+    {
+        int mid = (left + right) / 2;
+        if(left >= right)
+        {
+            return left;
+        }
+        if(isAte(mid,H,piles))
+        {
+            return binarySearch(left,mid,H,piles);
+        }
+        else
+        {
+            return binarySearch(mid+1,right,H,piles);
+        }
+    }
+    int minEatingSpeed(vector<int>& piles, int H) {
+        int m = 0;
+        for(int i = 0; i < piles.size(); i++)
+        {
+            m = max(m,piles[i]);
+        }
+        return binarySearch(1,m,H,piles);
+    }
+};

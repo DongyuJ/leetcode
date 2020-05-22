@@ -1,0 +1,45 @@
+//Jul/26/2018 ac 4ms beats 100%
+//建立两个头结点表示两个链表（链表1，链表2），然后遍历所有节点，小于就将（链表1）连到这个节点，大于就将链表2连到这个节点
+//最后将这两个链表相连，注意，1.链表2后面连到NULL，把线断掉。2.去掉两个链表的头结点。3.判断连表一中有没有有效的数据（head1 == l1）
+//如果是的话，证明所有的节点都大于x直接返回head2->next即可
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* partition(ListNode* head, int x) {
+        ListNode* head1 = new ListNode(0);
+        ListNode* l1 = head1;
+        ListNode* head2 = new ListNode(0);
+        ListNode* l2 = head2;
+        while(head != NULL)
+        {
+            if(head->val < x)
+            {
+                l1->next = head;
+                l1 = l1->next;
+            }
+            else
+            {
+                l2->next = head;
+                l2 = l2->next;
+            }
+            //cout<<head->val;
+            head = head->next;
+        }
+        l2->next = NULL;
+        if(head1 == l1)
+        {
+            return head2->next;
+        }
+        head = head1->next;
+        l1->next = head2->next;
+        return head;
+    }
+};

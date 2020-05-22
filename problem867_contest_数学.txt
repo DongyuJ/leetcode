@@ -1,0 +1,95 @@
+//Jul/9/2018 0ms
+//一开始用的枚举，但是超时，在网上看到一种思路，就是不在一个一个判断每一个数是否是回文数，而是依规律创造出所有的回文数，当回文数大于等于N时，判断是否为质数
+//将第一个符合条件的质数直接返回，对这个想法进行了一些改进，如果N是100以内的数，可以直接给出结果（总共就2,3,5,7,11这几个质数回文数）
+//而如果这个数大于100，则需要知道这个数是多少位，避免太多不必要的计算，由于可以通过翻折数字来创造回文数（直接翻折为偶数为，保留最后一位翻折为奇数位）
+//通过不断的变换奇偶数的翻折，可以按顺序制造出所有的回文数，当回文数大于N时，再判断是否为质数，是的话即为结果
+
+//如果N<101,直接比较保存的几个结果，然后从N的位数开始进行创建，如N为四位数，即从10001开始
+//创建过程，如：10开始到99，创建101到999的所有回文数，然后再从1001到9999进行偶数位的创建然后循环直至找到结果
+
+class Solution {
+public:
+    
+bool isPrime(int n)
+    {
+	    if (n == 2)
+	    {
+		    return true;
+	    }
+	    if (n < 2)
+	    {
+		    return false;
+	    }
+	    int end = sqrt(n);
+	    for (int i = 2; i <= end; i++)
+	    {
+		    if (n % i == 0)
+		    {
+			    return false;
+		    }
+	    }
+	    return true;
+    }
+
+
+    int primePalindrome(int N) {
+        int cnt = 0;
+        int n = N;
+        int res;
+        while(n != 0)
+        {
+            n /= 10;
+            cnt++;
+        }
+        cnt--;
+        cnt >>= 1;
+        if(!cnt)
+        {
+            cnt++;
+            vector<int> a = {2,3,5,7,11, 101};
+            for(int i = 0; i < a.size(); i++)
+            {
+                if(N <= a[i])
+                {
+                    return a[i];
+                }
+            }
+        }
+        int i = pow(10,cnt);
+	    while(1)
+        {
+            for(; i < 10 * i; i++) //creat palindrome with odd digits
+            {
+                int t = i / 10;
+                res = i;
+                while(t)
+                {
+                    res *= 10;
+                    res += t % 10;
+                    t /= 10;
+                }
+                if(res >= N && isPrime(res))
+                {
+                    return res;
+                }
+            }
+            
+            for(; i < 10 * i; i++) //creat palindrome with even digits
+            {
+                int t = i;
+                res = i;
+                while(t)
+                {
+                    res *= 10;
+                    res += t % 10;
+                    t /= 10;
+                }
+                if(res >= N && isPrime(res))
+                {
+                    return res;
+                }
+            }
+        }
+        return 0;
+    }
+};

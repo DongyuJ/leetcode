@@ -1,0 +1,38 @@
+//双指针固定一个窗口，记录这个窗口的数的总和sum
+//如果sum小于s，又指针向右移，这里要注意右边界问题
+//反之证明符合条件，先比较目前长度和记录的最短长度，然后移动左指针
+//这里注意，左指针先减后移动，右指针先移动后加
+
+class Solution {
+public:
+    int minSubArrayLen(int s, vector<int>& nums) {
+        if(nums.size() == 0){
+            return 0;
+        }
+        
+        int sum = nums[0];
+        int left = 0, right = 0;
+        int minSize = 0x7fffffff;
+        int flag = 0;
+        
+        while(right < nums.size()){
+            if(sum < s || left > right){
+                if(right == nums.size() - 1){
+                    break;
+                }
+                right++;
+                sum += nums[right];
+            }
+            else{
+                minSize = min(minSize, right - left + 1);
+                sum -= nums[left];
+                left++;
+                flag = 1;
+            }
+        }
+        if(!flag){
+            return 0;
+        }
+        return minSize;
+    }
+};

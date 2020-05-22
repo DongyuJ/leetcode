@@ -1,0 +1,56 @@
+//Jul/22/2018 ac 8ms  beats 99%
+//其实不一定要用堆栈，但是也可以算是堆栈的思想，寻找连续上升序列，直接计入堆栈，当有下降的时候开始处理数据
+//遇到下降的时候开始逐位pop数据，每一位pop出来的数据都求一次最大值，最大值即为pop出来的数据乘上到现在为止pop出来的位数
+//原理如下：每次开始处理的时候说明堆栈顶数据为一个局部最大值，对于该值而言，它的最大值就是自己本身，再向前追溯一位，由于栈保持单调递增，这时最大值应该为
+//刚才的最大值与现在这个值乘上2（弹出数）中大的那一个，以此类推。。。
+//打个比方：对于上升序列[1,2,3,4,5]，若后面不再上升，那么我们处理的时候就是比较[5*1,4*2,3*3,2*4,1*5]和原本保存的res，存下最大值
+//我们将处理到当前栈顶数据小于当前idx指向的heights中值，然后我们将这段处理过的数据全部改为heights[idx]打入栈，使栈在后面还保持不下降
+//这样做的依据是，后面的数据当高于这些值的时候如果要将这几个值也算进去，只能算这么高（这些值其实就是到目前为止的最小值）
+//在原数组最后加上一个0，确保这时是最小的，让前面的数据得到处理
+
+//用题目的样例数据举个例子：[2,1,5,6,2,3],我们的入栈以及判断情况(左边为栈顶)是[2]，res=0; [2],1<2开始处理，res = 2, [1,1];[5,1,1];[6,5,1,1];
+// [6,5,1,1] 2<6 开始处理， res=max[res,6*1,5*2],res=10, [2,2,2,1,1]; [3,2,2,2,1,1]; [3,2,2,2,1,1] 0<3,开始处理，res = max[res,3*1,2*2,2*3,2*4,1*5,1*6]
+
+class Solution {
+public:
+    int largestRectangleArea(vector<int>& heights) {
+        stack<int> st;
+        int idx = 0;
+        heights.push_back(0);
+        int res = 0;
+        while(idx != heights.size())
+        {
+            if(st.empty() || st.top() < heights[idx])
+            {
+                st.push(heights[idx]);
+                idx++;
+            }
+            else
+            {
+                int cnt = 1;
+                while(!st.empty() && st.top() > heights[idx])
+                {
+                    res = max(res, cnt * st.top());
+                    st.pop();
+                    cnt++;
+                }
+                for(int i = 0; i < cnt; i++)
+                {
+                    st.push(heights[idx]);
+                }
+                idx++;
+            }
+            //test
+            /*
+            stack<int> copy = st;
+            while(!copy.empty())
+            {
+                cout<<copy.top()<<" ";
+                copy.pop();
+            }
+            cout<<endl;
+            */
+        }
+        return res;
+    }
+};

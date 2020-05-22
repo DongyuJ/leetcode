@@ -1,0 +1,21 @@
+//Jun/8/2018 ac 10ms beats 79%
+//使用了map实现快速查找，原理是，当遇到一个数，就查找该关键字是否存在（使用count对象，如果直接查找会创建一个关键字，影响后续操作）
+//若不存在则将i储存在（target-nums[i]）关键字中，这样之后的查找中，如果有关键字存在，那么里面的值就是与之配对的数所在的位置。
+
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+	    map<int, int> numMap;
+	    vector<int> res;
+	    for (int i = 0; i < nums.size(); i++)
+	    {
+		    if (numMap.count(nums[i]) != NULL)
+		    {
+			    res.push_back(numMap[nums[i]]);
+			    res.push_back(i);
+			    return res;
+		    }
+		    numMap[target - nums[i]] = i;
+	    }
+    }
+};

@@ -1,0 +1,51 @@
+/**
+ * Definition for singly-linked list.
+//Sep/16/2018 ac 
+//与上一题一样，只不过把数组换成了链表，我又把链表处理成了数组。。。
+//看了别人的思路，运用了快慢指针，这应该才是这道题想考的点 
+
+* struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* Build(vector<int>& nums, int start, int end)
+    {
+        if(start > end)
+        {
+            return NULL;
+        }
+        
+        int mean = (end + start) / 2;
+        TreeNode* T = new TreeNode(nums[mean]);
+        
+        T->left = Build(nums, start, mean-1);
+        T->right = Build(nums, mean+1, end);
+        
+        return T;
+    }
+    
+    TreeNode* sortedListToBST(ListNode* head) {
+        vector<int> nums;
+        while(head != NULL)
+        {
+            nums.push_back(head->val);
+            head = head->next;
+        }
+        
+        TreeNode* root = Build(nums, 0, nums.size() - 1);
+        return root;
+    }
+};

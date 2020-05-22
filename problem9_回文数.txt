@@ -1,0 +1,33 @@
+//may/24/2018 ac 250ms,top 50%
+//注意不要直接用x操作
+class Solution {
+public:
+    bool isPalindrome(int x) {
+        int y = 0;
+        if(x < 0)
+        {
+            return 0;
+        }
+        else if(x == 0)
+        {
+            return 1;
+        }
+        else
+        {
+            int t = x;
+            while(t != 0){
+                y = (y * 10) + (t % 10);
+                t /= 10;
+            }
+            //cout<<y<<'-'<<x;
+            if(y == x)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+    }
+};

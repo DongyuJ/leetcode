@@ -1,0 +1,32 @@
+//Aug/5/2018 ac 
+//理解题意花费了太长的时间，题目本身很简单，其实就是按照行给出柱状图的长度，然后求在三个坐标轴两两组成的平面的投影面积之和
+//其中xy平面的投影就是看柱状图的个数，但是要注意，如果给出的柱状图高度为0的话，是没有投影的
+//yz平面就是从垂直x轴方向看过去，所以投影面积应该为每一行的最大值
+//xz平面就是垂直y轴看过去，就是每一列的最大值，这里由于已经说了列数不超过50，所以利用一个50的数组保存最大值，最后再进行一次循环把值加上即可
+
+class Solution {
+public:
+    int projectionArea(vector<vector<int>>& grid) {
+        int xy = 0;
+        int xz = 0;
+        int yz = 0;
+        vector<int> max2(50,0);
+        for(int i = 0; i < grid.size(); i++)
+        {
+            int max1 = 0;
+            for(int j = 0; j < grid[i].size(); j++)
+            {
+                xy += grid[i][j] != 0;
+                max1 = max(max1,grid[i][j]);
+                max2[j] = max(max2[j],grid[i][j]);
+            }
+            xz += max1;
+        }
+        
+        for(int i = 0; i < 50; i++)
+        {
+            yz += max2[i];
+        }
+        return xy+yz+xz;
+    }
+};

@@ -1,0 +1,35 @@
+//Jul/16/2018 ac
+//与田忌赛马一样，采用贪心的思路，先将A排序，对每一个B中的元素，都扫描一次A，直接选择刚好比B中元素大的那个，作为结果记录
+//如果没有就将最小的作为结果。
+
+class Solution {
+public:
+    vector<int> advantageCount(vector<int>& A, vector<int>& B) {
+        sort(A.begin(),A.end());
+        vector<int> res;
+        if(A.empty())
+        {
+            return res;
+        }
+        for(int i = 0; i < B.size(); i++)
+        {
+            int flag = 0;
+            for(int j = 0; j < A.size(); j++)
+            {
+                if(A[j] > B[i])
+                {
+                    res.push_back(A[j]);
+                    A.erase(A.begin() + j);
+                    flag = 1;
+                    break;
+                }
+            }
+            if(!flag)
+            {
+                res.push_back(A[0]);
+                A.erase(A.begin());
+            }
+        }
+        return res;
+    }
+};

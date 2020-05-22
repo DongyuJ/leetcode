@@ -1,0 +1,33 @@
+//may/29/2018 ac 3ms beats 90%
+//注意三重循环的理解
+//第一重：遍历输入的每一个数字
+//第二重：遍历现有的每一个答案
+//第三重：循环3或者4次（取决于当前处理的输入数字有几个对应字母）
+
+//合起来即为循环向每一种答案的最后面加上三种或者四中字母，有几个输入数字，就应该向末尾加入几次字母（每次加入变为三个或者四个答案）
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+		string letter[8] = {"abc","def","ghi","jkl","mon","pqrs","tuv","wxyz"};
+		int l = digits.size();
+		vector<string> res(1,"");
+        if(digits.empty())
+        {
+            vector<string> res0;
+            return res0;
+        }
+		for(int i = 0; i < l; i++)
+		{
+			vector<string> temp;
+			for(int j = 0; j < res.size(); j++)//即原来每一种结果都要再加入三个或四个字符切分成新的结果
+			{
+				for(int k = 0; k < letter[digits[i] - '2'].size(); k++)
+				{
+					temp.push_back(res[j] + letter[digits[i] - '2'][k]);//向结尾加入字符，并将结果变为多个字符
+				}
+			}
+			res = temp;//用新答案替代原答案
+		}
+		return res;
+	}
+};

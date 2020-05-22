@@ -1,0 +1,45 @@
+//Jun/29/2018 ac 4ms beats 99.5%
+//先将短的数字补齐，进行加法的时候要注意，ASCII码和数字，因为有两个ASCII码相加需要减掉两个‘0’最后传入ASCII码所以要加上一个，总结下来就是减掉一个‘0’
+//还有就是结尾要注意carry中还有没有残留
+
+class Solution {
+public:
+    string addBinary(string a, string b) {
+	bool carry = 0;
+	string res;
+	int m = a.size() - b.size();
+	m = abs(m);
+	//cout << m << endl;
+	if (a.size() > b.size())
+	{
+		b.insert(0, m, '0');
+	}
+	if (b.size() > a.size())
+	{
+		a.insert(0, m, '0');
+	}
+	int pi = a.size() - 1;
+	while (pi > -1)
+	{
+		if (a[pi] + b[pi] - '0' + carry >= '2')
+		{
+			res.push_back(a[pi] + b[pi] +carry - '0' - 2);
+			carry = 1;
+		}
+		else
+		{
+			res.push_back(a[pi] + b[pi] + carry - '0');
+			carry = 0;
+		}
+		pi--;
+	}
+	
+	if (carry)
+	{
+		res.push_back('1');
+	}
+
+	reverse(res.begin(), res.end());
+	return res;
+}
+};

@@ -1,0 +1,52 @@
+//Aug/14/2018 ac 
+//找规律，按照题目给的方式螺旋读取数组中的数据，当超出数组范围不做处理，当在范围内就记录下当前坐标
+
+class Solution {
+public:
+    vector<vector<int>> spiralMatrixIII(int R, int C, int r0, int c0) {
+        int cnt = 1;
+        vector<vector<int>> res;
+        int area = R * C;
+        res.push_back({r0,c0});
+        while(res.size() < area)
+        {
+            for(int i = 0; i < cnt; i++)
+            {
+                c0++;
+                if(c0 < C && c0 > -1 && r0 < R && r0 > -1)
+                {
+                    res.push_back({r0,c0});
+                }
+            }
+            for(int i = 0; i < cnt; i++)
+            {
+                r0++;
+                if(c0 < C && c0 > -1 && r0 < R && r0 > -1)
+                {
+                    res.push_back({r0,c0});
+                }
+            }
+            
+            cnt++;
+            
+            for(int i = 0; i < cnt; i++)
+            {
+                c0--;
+                if(c0 < C && c0 > -1 && r0 < R && r0 > -1)
+                {
+                    res.push_back({r0,c0});
+                }
+            }
+            for(int i = 0; i < cnt; i++)
+            {
+                r0--;
+                if(c0 < C && c0 > -1 && r0 < R && r0 > -1)
+                {
+                    res.push_back({r0,c0});
+                }
+            }
+            cnt++;
+        }
+        return res;
+    }
+};

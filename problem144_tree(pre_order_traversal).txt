@@ -1,0 +1,35 @@
+//记得前中后序遍历是指的访问根节点的时机
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void traversal(TreeNode* root, vector<int>& val){
+        if(root == NULL){
+            return;
+        }
+        val.push_back(root->val);
+        traversal(root->left, val);
+        traversal(root->right, val);
+        
+        return;
+    }
+    
+    vector<int> preorderTraversal(TreeNode* root) {
+        vector<int> result;
+        if(!root){
+            return result;
+        }
+        
+        traversal(root, result);
+        
+        return result;
+    }
+};

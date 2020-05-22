@@ -1,0 +1,20 @@
+//march/9/2019 ac
+//非常巧妙，利用异或，因为异或满足交换律，按顺序异或与排列好后
+//异或可以看作是一样的，同时a^a=0; 0^a = a，所以开头定为0
+//一直向下异或，最后剩下的一定是落单的元素
+
+//只能在保证只有一个落单元素的情况下使用
+
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        
+        int res = 0;
+        
+        for(int i = 0; i < nums.size(); i++){
+            res ^= nums[i];
+        }
+        
+        return res;
+    }
+};

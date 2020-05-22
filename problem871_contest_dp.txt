@@ -1,0 +1,56 @@
+//Jul/18/2018	ac
+//网上大佬说，最值问题一般都要用到动态规划
+//关于本题，其实如果另dp[i]为i个油站最远可以到达的距离，那么dp[i+1]就是dp[i]加上dp[i]保存的最远的距离范围能能到达的存油最多的油站（记得去掉已经加过油的）
+
+class Solution {
+public:
+    int minRefuelStops(int target, int startFuel, vector<vector<int>>& stations) {
+        if(startFuel >= target)
+        {
+            return 0;
+        }
+        if(stations.empty())
+        {
+            return -1;
+        }
+        if(startFuel < stations[0][0])
+        {
+            return -1;
+        }
+        vector<int> dp;
+        dp.push_back(startFuel);
+        for(int i = 0; i < stations.size(); i++)
+        {
+            int j = 0;
+            int m = 0;
+            int idx;
+            while(j < stations.size() && dp[i] >= stations[j][0])
+            {
+                if(m < stations[j][1])
+                {
+                    m = stations[j][1];
+                    idx = j;
+                }
+                j++;
+            }
+            if(m == 0)
+            {
+                return -1;
+            }
+            dp.push_back(dp[i] + m);
+            stations[idx][1] = 0;
+            if(dp[i+1] >= target)
+            {
+                break;
+            }
+        }
+        if(dp[dp.size() - 1] >= target)
+        {
+            return dp.size() - 1;
+        }
+        else
+        {
+            return -1;
+        }
+    }
+};

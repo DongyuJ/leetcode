@@ -1,0 +1,65 @@
+//feb/28/2019 ac beats 100% 40min
+//这题一定要注意数据结构，包括每次建立新的node要传入一个空的
+//vector 表示neighbors。 其次注意细节，当发现了已经建立的点的时候
+//不要新建点在原有的点的列表中找到已建立的克隆节点
+//最后注意第一个点，要先加入克隆点vector和visited，就是这个问题
+//没有解决导致无法在35分钟内解决这题
+
+//这题的样例输出中的ref表示一条连向已经访问过的节点的边
+
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    vector<Node*> neighbors;
+
+    Node() {}
+
+    Node(int _val, vector<Node*> _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+};
+*/
+class Solution {
+public:
+    void DFS_search(Node* node, Node* clone_node, vector<int> &visited, vector<Node*> &node_list){
+        for(int i = 0; i < node->neighbors.size(); i++){
+            int n = node->neighbors[i]->val;
+            
+            if(!visited[n]){
+                visited[n] = 1;
+                vector<Node*> _neighbors;
+                Node* newNode = new Node(n, _neighbors);
+                clone_node->neighbors.push_back(newNode);
+                node_list.push_back(newNode);
+                DFS_search(node->neighbors[i], clone_node->neighbors[i], visited, node_list);
+            }
+            
+            else{
+                for(int j = 0; j < node_list.size(); j++){
+                    if(node_list[j]->val == n){
+                        clone_node->neighbors.push_back(node_list[j]);
+                    }
+                }
+            }
+        }
+    }
+    
+    Node* cloneGraph(Node* node) {
+        vector<int> visited;
+        visited.resize(102, 0);
+        visited[node->val] = 1;
+
+        vector<Node*> _neighbors;
+        vector<Node*> node_list;
+        
+        Node* clone_node = new Node(node->val, _neighbors);
+                node_list.push_back(clone_node);
+        
+        DFS_search(node, clone_node, visited, node_list);
+        
+        return clone_node;
+    }
+};

@@ -1,0 +1,33 @@
+//Jul/3/2018 ac 5ms beats 30% space: O(1), one-pass
+//参考了网上的思路，对数组进行平移插入，每一次向后平移一位，并将数字插入合适的地方
+
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        if(nums.empty())
+        {
+            return;
+        }
+        int p1 = -1;
+        int p2 = -1;
+        int p3 = -1;
+        for(int i = 0; i < nums.size(); i++)
+        {
+            if(nums[i] == 0)
+            {
+                nums[++p1] = 2;
+                nums[++p2] = 1;
+                nums[++p3] = 0;
+            }
+            else if(nums[i] == 1)
+            {
+                nums[++p1] = 2;
+                nums[++p2] = 1;
+            }
+            else
+            {
+                nums[++p1] = 2;
+            }
+        }
+    }
+};

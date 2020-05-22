@@ -1,0 +1,18 @@
+//Jun/ 19/2018 ac 12ms beats 93% O(n)
+//子序列和最大遵循两个原则，
+//1.如果当前数字大于之前数字的和，则更新sum，从当前数字开始
+//2.如果当前最大值大于之前最大值，更新res；
+
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int sum = nums[0];
+	    int res = sum;
+	    for (int i = 1; i < nums.size(); i++)
+	    {
+		    sum = max(nums[i], sum + nums[i]);
+		    res = max(res, sum);
+	    }
+	    return res;
+    }
+};

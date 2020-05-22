@@ -1,0 +1,54 @@
+//may/23/2018  ac 60ms
+//注意：发现重复后，寻找该重复字符的上一次出现位置，并从那个位置的下一个位置开始第二轮寻找。
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int flag[256] = {0};		//字符包含所有ASCII码表上有的字符
+        int cont = 0;
+        int precont = 0;
+        int j = 0;
+        int k = 0;
+        int l = s.length();
+        //cout<<l;
+        while(k < l)			//注意因为包含s[0]，最后一位为l-1。
+        {
+            int sub = s[k];
+            if(flag[sub] == 0)
+            {
+                flag[sub] = 1;
+                cont++;
+                if(k == l-1)		//若到最后一位也没有重复，需特殊处理，判断此次计数器是否比之前记录值大。
+                {
+                    if(cont > precont)
+                    {
+                        precont = cont;
+                    }
+                }
+            }
+            else
+            {
+                for(j = k-1;j >= 0;j--)	//寻找上一次出现，并将k重置到那个位置。
+                {
+                    if(s[j] == s[k])
+                    {
+                        break;
+                    }
+                }
+                k = j;
+                for(int i = 0;i < 256;i++)	//重新初始化标记，计数器，如果此次计数器较大则替换之前的计数值
+                {
+                    flag[i] = 0;
+                }
+                if(cont > precont)
+                {
+                    precont = cont;
+                }
+                cont = 0;
+            }
+            //cout<<cont<<'-'<<k<<endl;
+            k++;				//正常循环k向下一位，若k已被重置，也需要从下一位开始下一次寻找
+        }
+        return precont;
+    }
+};

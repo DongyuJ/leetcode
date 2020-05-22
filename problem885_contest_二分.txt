@@ -1,0 +1,72 @@
+//Aug/5/2018 ac
+//一开始用的双重循环，结果超时了，然后改用二分，很可惜，就差一点点没来得及在规定时间内完成
+//思路也是比较简单的，就是先排序，然后从前向后遍历，每一次取到的值就当做登上船的第一个人，这里运用贪心的思想，寻找体重最大的能和他一起上船的人，
+//然后从原数组中删去这个人，再继续循环
+
+//如果运用二分的话，就可以把效率从原先的（n2）提高到log（n），二分的时候注意根据这道题目进行一点改动。首先，因为我们要求的是不大于limit的最大的重量，
+//所以，我们是向左边逼近，不能舍弃左边的值，即，people[mid] < target的时候也不能舍弃mid，新的范围是[mid,right]，不然有可能将需要返回的值舍掉了
+//不过，这样会造成不止一种的返回情况，一种是找到了正好等于target的数，那就不用犹豫，直接返回，还有可能剩下两个数，这时候左右两个数都有可能是需要返回的数
+//需要进行一下判断，如果都小于target，返回右边的，只有左边的小于就返回左边的，两边都大于target的情况在传入之前先行处理（后面再说），还可以提高效率
+//还有一种就是只剩一个数，返回即可（题目中直接并到了两个数的情况，因为反正左右一样，返回哪一边都随意）
+
+//传入前先判断，如果这已经是最后一个人，那么直接给这个人一艘船就可以了。
+//还有就是，在传入前先保证后面的数据中一定有能与选定的第一个人登上一艘船的人，如果没有（他的后一位都不能与他同乘一艘船），因为已经排过序了，
+//所以可以直接得知，后面每个人都需要一艘船，直接计算后面的人数跳出循环即可
+
+class Solution {
+public:
+    int BinarySearch(vector<int>& people,int left,int right,int target)
+    {
+        if(left == right - 1 || left == right)
+        {
+            if(people[right] <= target)
+            {
+                return right;
+            }
+            else
+            {
+                return left;
+            }
+        }
+        int mid = (left + right) / 2;
+        if(people[mid] == target)
+        {
+            return mid;
+        }
+        else if(people[mid] > target)
+        {
+            return BinarySearch(people,left,mid-1,target);
+        }
+        else
+        {
+            return BinarySearch(people,mid,right,target);
+        }
+    }
+    
+    int numRescueBoats(vector<int>& people, int limit) {
+        if(people.size() <= 1)
+        {
+            return 1;
+        }
+        sort(people.begin(),people.end());
+        
+        int cnt = 0;
+        
+        for(int i = 0; i < people.size(); i++)
+        {
+            cnt++;
+            if(i == people.size() - 1)
+            {
+                break;
+            }
+            if(people[i] + people[i+1] > limit)
+            {
+                cnt += people.size() - (i + 1);
+                break;
+            }
+            int j = BinarySearch(people,i+1,people.size() - 1,limit - people[i]);
+            people.erase(people.begin() + j);
+        }
+        return cnt;
+    }
+};

@@ -1,0 +1,64 @@
+//Jul/1/2018 ac contest
+//We have a two dimensional matrix A where each value is 0 or 1.
+
+//A move consists of choosing any row or column, and toggling each value in that row or column: changing all 0s to 1s, and all 1s to 0s.
+
+//After making any number of moves, every row of this matrix is interpreted as a binary number, and the score of the matrix is the sum of these numbers.
+
+//Return the highest possible score.
+
+//利用贪心原则，即每次变换一定比原来更大，首先，对行进行遍历，如果有首位不是1的直接将这一行变换
+//再对列进行遍历，如果有列的0数量比1多，则进行变换，可以看出，这样变换过后，无论再变换哪一行或者那一列都会导致结果变小
+//最后利用2进制加法函数进行加法运算并转化为十进制
+//这里的变换采用x * （-1） + 1，这样可以使0-》1,1-》0.
+
+class Solution {
+public:
+    int countbinary(vector<vector<int>>& A, int row, int col)
+{
+	int res = 0;
+	for (int i = 0; i < row; i++)
+	{
+		for (int j = 0; j < col; j++)
+		{
+			res += A[i][j] * pow(2, col - j - 1);
+		}
+	}
+	return res;
+}
+
+int matrixScore(vector<vector<int>>& A) {
+	int row = A.size();
+	int col = A[0].size();
+	for (int i = 0; i < A.size(); i++)
+	{
+		if (A[i][0] == 0)
+		{
+			for (int j = 0; j < A[i].size(); j++)
+			{
+				A[i][j] = A[i][j] * (-1) + 1;
+			}
+		}
+	}
+	for (int i = 1; i < col; i++)
+	{
+		int cnt = 0;
+		for (int j = 0; j < row; j++)
+		{
+			if (A[j][i] == 0)
+			{
+				cnt++;
+			}
+		}
+		if (cnt > (row / 2))
+		{
+			for (int j = 0; j < row; j++)
+			{
+				A[j][i] = A[j][i] * (-1) + 1;
+			}
+		}
+	}
+	int res = countbinary(A,row,col);
+	return res;
+}
+};

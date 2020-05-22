@@ -1,0 +1,61 @@
+//Jun/12/2018 ac 12ms beats 86%
+//二分查找停止后往左右扩大范围即可，时间复杂度上扩大范围需要O(n)，所以其实超过了题目的要求，另一种思路是找到目标后仍然继续二分，直到达到右端点
+//然后再向左进行二分查找，可以达到O（log（n））的要求。
+
+class Solution {
+public:
+    int binarySearch(int left, int right, int target, vector<int>& nums)
+{
+	int mean = (left + right) >> 1;
+	if (target == nums[mean])
+	{
+		return mean;
+	}
+	else if (left > right)
+	{
+		return -1;
+	}
+	else if (target > nums[mean])
+	{
+		return binarySearch(mean + 1, right, target, nums);
+	}
+	else
+	{
+		return binarySearch(left, mean - 1, target, nums);
+	}
+}
+
+vector<int> searchRange(vector<int>& nums, int target) {
+	vector<int> res;
+	if (nums.empty())
+	{
+		res.push_back(-1);
+		res.push_back(-1);
+		return res;
+	}
+	int one;
+	one = binarySearch(0, nums.size() - 1, target, nums);
+	if (one == -1)
+	{
+		res.push_back(-1);
+		res.push_back(-1);
+		return res;
+	}
+	else
+	{
+		int left = one;
+		int right = one;
+		while (left > -1 && nums[left] == target)
+		{
+			left--;
+		}
+		while (right < nums.size() && nums[right] == target)
+		{
+			right++;
+		}
+		res.push_back(left + 1);
+		res.push_back(right - 1);
+		return res;
+	}
+}
+};

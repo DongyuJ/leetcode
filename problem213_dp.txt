@@ -1,0 +1,32 @@
+//beats 100% 198的加强版
+
+//由于首尾相连，所以分为两个问题，一个有首无尾的链和
+//一个有尾无首的链，分别进行dp，分别提出最后两位
+//找出四个数中最大的（s[i] = n[i] + max(s[i - 2], s[i - 3])）
+//结束点可能为倒数第一位或者倒数第二位
+
+//这里特殊条件包含了n = 0，1，2，3要注意
+
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        int n = nums.size();
+        
+        if(n == 0) return 0;
+        if(n == 1) return nums[0];
+        if(n == 2) return max(nums[0], nums[1]);
+        if(n == 3) return max(nums[0], max(nums[1], nums[2]));
+        
+        vector<int> sums1(n, 0);
+        vector<int> sums2(n, 0);
+        sums1[0] = nums[0], sums2[1] = nums[1];
+        sums1[1] = nums[1], sums2[2] = nums[2];
+        sums1[2] = nums[0] + nums[2], sums2[3] = nums[1] + nums[3];
+        for(int i = 3; i < n - 1; i++){
+            sums1[i] = max(nums[i] + sums1[i - 2], nums[i] + sums1[i - 3]);
+            sums2[i + 1] = max(nums[i + 1] + sums2[i - 1], nums[i + 1] + sums2[i - 2]);
+        }
+        
+        return max(max(sums1[n - 3], sums1[n - 2]), max(sums2[n - 1], sums2[n - 2]));
+    }
+};

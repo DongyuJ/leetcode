@@ -1,0 +1,51 @@
+//may/28/2018 ac 10ms beats 89%!!
+
+class Solution {
+public:
+    int threeSumClosest(vector<int>& nums, int target){
+    int res;
+    sort(nums.begin(),nums.end());
+    int pi,bi;
+    int dif = INT_MAX;
+    int tempdif;
+    for(int i = 0;i < nums.size() - 2;i++)
+    {
+        //cout<<i;
+        if(i != 0 && nums[i] == nums[i - 1])
+        {
+            continue;
+        }
+        pi = i + 1;
+        bi = nums.size() - 1;
+        while(pi < bi){
+            //cout<<k;
+            tempdif = abs(target - nums[i] - nums[pi] - nums[bi]);
+            if(dif > tempdif)
+            {
+                dif = tempdif;
+                res = nums[i] + nums[pi] + nums[bi];
+            }
+            if(nums[i] + nums[pi] + nums[bi] == target)
+            {
+                //cout<<"1";
+                return target;
+            }
+            else if(nums[i] + nums[pi] + nums[bi] < target)
+            {
+                pi++;
+            }
+            else
+            {
+                bi--;
+            }
+            while(pi - 1 != i && nums[pi - 1] == nums[pi]){
+                pi++;
+            }
+            while((bi != nums.size() - 1) && (nums[bi + 1] == nums[bi])){
+                bi--;
+            }
+        }
+    }
+    return res;
+}
+};

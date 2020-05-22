@@ -1,0 +1,26 @@
+//按题意一步步操作即可
+
+class Solution {
+public:
+    int digitSquare(int n){
+        int result = 0;
+        
+        while(n){
+            result += pow(n % 10, 2);
+            n /= 10;
+        }
+        
+        return result;
+    }
+    
+    bool isHappy(int n) {
+        map<int, bool> dict;
+        
+        while(dict.find(n) == dict.end()){
+            dict[n] = 1;
+            n = digitSquare(n);
+        }
+        
+        return n == 1;
+    }
+};

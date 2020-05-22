@@ -1,0 +1,32 @@
+//may/25/2018 ac 28ms
+//这道题如果使用暴力查找会超时
+//使用贪心算法，找到局部的最优解一步步逼近，使时间复杂度从O（n^2）降到O(n）
+//此次贪心算法的的关键点在于，由于高由较低的一方决定，起始两个端点设为最左和最右端（i，j），如果有一个更优解，
+//那么他在高度上必然比h（i，j）中较低的一方高，因为向中间移动i，j，必然使长度减少。那么我们可以断言，
+//如果有一个比当前更优的解，它的高度一定至少超过h（i，j）中较小的那一个，所以我们选择每一次将高度较小的那一方
+//向中间移动一步奏，并计算面积，直到i，j相遇，此时保存的最大值应为全局最大值。只需要遍历一次就可以求得结果。
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int area = 0;
+        int marea = 0;
+        int i = 0;
+        int j = height.size() - 1;
+        while(i != j){
+            area = min(height[i],height[j]) * (j - i);
+            if(area > marea)
+            {
+                marea = area;
+            }
+            if(height[i] > height[j])
+            {
+                j--;
+            }
+            else
+            {
+                i++;
+            }
+        }
+        return marea;
+    }
+};

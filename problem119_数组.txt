@@ -1,0 +1,26 @@
+//ac Jan/1/2019
+//We need to solve this in O(k) space, and notice every 
+//line of Pascal's triangle is only decided by the last line
+//so, just save the last line and count the next line unil reach
+//k-th(index) line
+
+class Solution {
+public:
+    vector<int> getRow(int rowIndex) {
+        int k = rowIndex;
+        if(k == 0){
+            return {1};
+        }
+        vector<int> pre = {1, 1};
+        vector<int> res = {1, 1};
+        for(int i = 2; i <= k; i++){
+            vector<int> cur(k + 1, 1);
+            for(int j = 1; j < i; j++){
+                cur[j] = pre[j - 1] + pre[j];
+            }
+            res = cur;
+            pre = cur;
+        }
+        return res;
+    }
+};

@@ -1,0 +1,54 @@
+//Jul/8/2018 ac 0ms 重要
+//采用回溯的方法，用layer记录当前节点的深度，然后向下深度优先搜索，返回值为该节点距离最底部的距离，当搜寻到底的时候（T==NULL），返回0
+//l与r分别记录左右子节点距离底端的距离，用d记录左右子节点中距离底部较大（即更深的那一路）。其中d+layer 可以算出该节点的子节点中最大的深度
+//最后返回d+1，因为当返回上一层的时候，距离底部的深度+1.
+//改变res（在函数中被我命名为了temp，懒得改了）的条件为：l==r，这意味着某个节点的左右子节点拥有一样的深度，此时应将答案记为该节点，同时，最大深度为d+layer
+//因为我们是在返回的途中开始记录最大深度的，所以不用担心会出现l!=r && d + layer >= deepest的情况（当搜索到底部的时候就记录下了最深的节点）
+//之所以当l==r的时候需要进行更新是因为我们需要找到一个能够将所有最深子节点全部包括的节点，当左右两个子节点的最深子节点一致的时候，意味着我们原来的
+//记录是不全面的，而当前节点就是最小的包含了目前为止所有最深的子节点的父节点。
+
+//这道题里面，使用l==r作为判断是否更新的条件尤其巧妙，同时这种深度优先搜索到底后通过不断地回溯，并在回溯过程中进行信息的收集也是很重要的方法。
+
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int dfs(TreeNode* T, int* deepest, TreeNode*& temp, int layer)
+    {
+        if(T == NULL)
+        {
+            return 0;
+        }
+        
+        
+        int l = dfs(T->left,deepest,temp,layer + 1);
+        int r = dfs(T->right,deepest,temp, layer + 1);
+        int d = max(l,r);
+        
+        if(l == r && layer + d >= *deepest)
+        {
+            *deepest = d + layer;
+            temp = T;
+        }
+        
+        return d + 1;
+    }
+    
+    TreeNode* subtreeWithAllDeepest(TreeNode* root) {
+        TreeNode* res = root;
+        int* deepest;
+        int d = 0;
+        deepest = &d;
+        dfs(root, deepest, res, 0);
+        //cout<<m;
+        return res;
+    }
+};

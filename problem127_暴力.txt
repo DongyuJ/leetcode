@@ -1,0 +1,50 @@
+//feb 23 2019
+// 从endword 开始向前寻找差距为1的单词（对于每一个距离），
+//类似bfs，开始将除end和begin以外的距离设为intmax，
+//初始化一下end，如果找不到直接返回0.
+//如果有一层断了（找不到差距为一）， 则跳出
+
+class Solution {
+public:
+    int distant(string w1, string w2){
+        int l = w1.size();
+        int dis = 0;
+        for(int i = 0; i < l; i++){
+            if(w1[i] != w2[i]){
+                dis ++;
+            }
+        }
+        return dis;
+    }
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+        wordList.push_back(beginWord);
+        vector<int> dist_map(wordList.size(), 0x7fffffff);
+        int update = 0;
+        for(int i = 0; i < wordList.size(); i++){
+            if(endWord == wordList[i]){
+                update = 1;
+                dist_map[i] = 0;
+                break;
+            }
+        }
+        for(int d = 0; d < wordList.size() && update; d++){
+            update = 0;
+            for(int i = 0; i < wordList.size(); i++){
+                if(d == dist_map[i]){
+                    for(int j = 0; j < wordList.size(); j++){
+                        int dist = distant(wordList[i], wordList[j]);
+                        if(dist == 1 && dist_map[i] < dist_map[j]){
+                            dist_map[j] = d + 1;
+                            update = 1;
+                        }
+                    }
+                }
+                
+            }   
+        }
+        // cout<<dist_map[0] << " " <<dist_map[1]<<" "<<dist_map[2]<<" "<<dist_map[3]<<" "<<dist_map[4]<<" "<<dist_map[5];
+        if(dist_map[dist_map.size() - 1] == 0x7fffffff)
+            return 0;
+        return dist_map[wordList.size() - 1] + 1;
+    }
+};

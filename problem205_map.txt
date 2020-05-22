@@ -1,0 +1,26 @@
+//这里注意题目的映射是指双向的，就是说s到t和t到s都必须一一对应
+
+class Solution {
+public:
+    bool isIsomorphic(string s, string t) {
+        map<char, char> dictS, dictT;
+        
+        if(s.size() != t.size()){
+            return false;
+        }
+        
+        for(int i = 0; i < s.size(); i++){
+            if(dictS.find(s[i]) == dictS.end() && dictT.find(t[i]) == dictT.end()){
+                dictS[s[i]] = t[i];
+                dictT[t[i]] = s[i];
+            }
+            else{
+                if(dictS[s[i]] != t[i] || dictT[t[i]] != s[i]){
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+};

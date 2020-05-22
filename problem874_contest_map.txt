@@ -1,0 +1,60 @@
+//Jul/23/2018 ac
+//需要将obstacles存到一张map中，不然效率太低，其他只需要模拟即可
+//用mov前4行存在4种行动方式（上右下左），然后用dir来控制当前的行动方式，mov第五列存当前的位置
+//按照顺时针的方式来规定div的好处在于，可以统一的计算转向（运用加一和减一）
+//要注意，负数的取余也是负数（-1%4 = -1）
+
+class Solution {
+public:
+    int robotSim(vector<int>& commands, vector<vector<int>>& obstacles) {
+        if(commands.empty())
+        {
+            return 0;
+        }
+        map<vector<int>,bool> obs;
+        for(int i = 0; i < obstacles.size(); i++)
+        {
+            obs[obstacles[i]] = 1;
+        }
+        int res = 0;
+        vector<vector<int>> mov = {{0,1},{1,0},{0,-1},{-1,0},{0,0}};
+        int dir = 0;
+        for(int i = 0; i < commands.size(); i++)
+        {
+            if(commands[i] >= 0)
+            {
+                for(int j = 0; j < commands[i]; j++)
+                {
+                    vector<int> temp = {mov[4][0] + mov[dir][0], mov[4][1] + mov[dir][1]};
+                    if(obs[temp] == 1)
+                    {
+                        break;
+                    }
+                    mov[4][0] += mov[dir][0];
+                    mov[4][1] += mov[dir][1];
+                }
+                res = max(res,(int)(pow(mov[4][0],2) + pow(mov[4][1],2)));
+            }
+            else    //up:0,right:1,down:2,left:3;
+            {
+                if(commands[i] == -1)
+                {
+                    dir += 1;
+                    if(dir > 3)
+                    {
+                        dir -= 4;
+                    }
+                }
+                else
+                {
+                    dir -= 1;
+                    if(dir<0)
+                    {
+                        dir += 4;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+};

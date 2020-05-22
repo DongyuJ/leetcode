@@ -1,0 +1,19 @@
+// 要求log复杂度， 最终复杂度O（log5（n））
+//其实数0就是数5 的个数，首先用n/5找出有多少个5因子（形成一个0）
+//再除以25 找出25因子，这会形成两个0，但是之前在5因子中已经计算过
+//1个了，所以再加上一个即可，以此类推。。。
+
+class Solution {
+public:
+    int trailingZeroes(int n) {
+        long long fac = 5;
+        int cnt = 0;
+        
+        while(fac <= n){
+            cnt += n / fac;
+            fac *= 5;
+        }
+        
+        return cnt;
+    }
+};

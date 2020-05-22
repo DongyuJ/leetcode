@@ -1,0 +1,101 @@
+//建立一个树结构，又26个边，分别代表每个字母，
+//每个节点还有一个isEnd变量，代表存在从顶点到该节点的单词
+
+//这里为了不更改原函数，所以增加了一个cur指针记录当前位置
+//所以每次存完查完都要返回根节点以便下一次使用
+
+//存比较简单，迭代处理word的第一个字符，如果word为空，将
+//当前cur的isEnd记录为1. 如果顺着第一个字符的边找到节点已经存在
+//那么直接将cur移动到那个节点并处理word第一位后面的字符，
+//如果这个节点不存在，就新建一个节点
+
+//查找分为几种情况（也是迭代处理）：
+//1.cur不存在：没有这个单词
+//2.cur存在，word.size == 0，查看cur.isEnd看这个单词是否存在
+//3.cur存在，word[0] != '.',顺着这条边往下走
+//4.cur存在，word[0] == '.'，遍历所有边，要注意，拷贝一个cur，因为
+//每次如果查不到都会将cur指向root，这时查下一条边我们需要恢复
+//到之前的cur。
+
+
+class WordDictionary {
+    
+public:
+    
+    /** Initialize your data structure here. */
+    struct trie {
+	    trie *children[26] = {NULL};
+	    bool isEnd = false;
+
+	    trie() {
+		    for (int i = 0; i < 26; i++) {
+			    children[i] = NULL;
+		    }
+	    }
+    };
+    
+    trie *root = new trie;
+    trie * cur = root;
+    
+    /** Adds a word into the data structure. */
+    void addWord(string word) {
+        if(word.size() == 0){
+            cur->isEnd = true;
+            cur = root;
+            return;
+        }
+        int child = word[0] - 'a';
+        if (cur->children[child]) {
+			cur = cur->children[child];
+		}
+        else{
+            trie *newNode = new trie();
+            cur->children[child] = newNode;
+            cur = newNode;
+        }
+        addWord(word.substr(1, word.size() - 1));
+        return;
+    }
+    
+    /** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
+    bool search(string word) {
+        if(cur == NULL){
+            cur = root;
+            return false;
+        }
+        if(word.size() == 0){
+            bool result = cur->isEnd;
+            cur = root;
+            return result;
+        }
+        else if(word[0] != '.'){
+            int child = word[0] - 'a';
+            if(cur->children[child] == NULL){
+                cur = root;
+                return false;
+            }
+            cur = cur->children[child];
+            return search(word.substr(1, word.size() - 1));
+        }
+        else{
+            trie *_cur = cur;
+            for(int i = 0; i < 26; i++){
+                cur = _cur;
+                cur = cur->children[i];
+                if(search(word.substr(1, word.size() - 1))){
+                    cur = root;
+                    return true;
+                }
+            }
+            cur = root;
+            return false;
+        }
+    }
+};
+
+/**
+ * Your WordDictionary object will be instantiated and called as such:
+ * WordDictionary* obj = new WordDictionary();
+ * obj->addWord(word);
+ * bool param_2 = obj->search(word);
+ */

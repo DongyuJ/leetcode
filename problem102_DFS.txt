@@ -1,0 +1,38 @@
+//Aug/18/2018 ac 4ms beats 99.7%
+//DFS遍历一次即可，如果res中没有，就加入一行，如果有，就在后面补上当前的数字
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void DFS(int layer, vector<vector<int>>& res, TreeNode* T)
+    {
+        if(T == NULL)
+        {
+            return;
+        }
+        if(res.size() < layer)
+        {
+            res.push_back({T->val});
+        }
+        else
+        {
+            res[layer - 1].push_back(T->val);
+        }
+        DFS(layer+1, res, T->left);
+        DFS(layer+1, res, T->right);
+    }
+    
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> res;
+        DFS(1, res, root);
+        return res;
+    }
+};

@@ -1,0 +1,65 @@
+//Jun/4/2018 ac 57ms，超级慢
+
+//解法逻辑比较混乱，不是最优解
+//思路，将k个节点逆序，可以通过(k-1)+(k-2)+...+1次两两交换实现如：[1,2,3],2    123->213->231->321
+//即一个双重循环，从前向后两两交换，每一次会把当前第一个节点放到相应的位置（倒数第j+1位）
+//通过一次计数，可以算出一共需要多少次逆序，对每次逆序都用上述方法处理
+//注意点就是每次逆序完成，需要重置rec和l还是以[1,2,3],2为例，应传入123（传入l（1））->213（传入l->next）->(l=rec)231(传入l)->321
+//rec保持在每k个节点的第一位。当前k个逆序完成后，rec向后跳k位。
+//交换函数为了处理前序节点的指针，需要从前一位开始传入，可以对链表预处理，加上一个（-1）的头结点，返回时从下一位开始返回。
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void SwapList(ListNode* l)
+    {
+        ListNode* temp = l;
+        ListNode* pi = l;
+        pi = ((pi->next)->next)->next;
+        ((temp->next)->next)->next = temp->next;
+        temp->next = (temp->next)->next;
+        ((temp->next)->next)->next = pi;
+    }
+    
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        if(k==1)
+        {return head;}
+        int cont = 0;
+        ListNode* l = head;
+        while(l != NULL)
+        {
+            cont++;
+            l = l->next;
+        }
+        l = new ListNode(-1);
+        l->next = head;
+        ListNode* h = l;
+        ListNode* rec = l;
+        for(int i = 0; i < cont/k; i++)
+        {
+            for(int j = 1; j < k; j++)
+            {
+                l = rec;
+                for(int p = j; p < k; p++)
+                {
+                    SwapList(l);
+                    l = l->next;
+                }
+                //rec = rec->next;
+            }
+            for(int j = 0; j < k; j++)
+            {
+                rec = rec->next;
+            }
+        }
+        return h->next;
+        
+    }
+};

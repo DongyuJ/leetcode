@@ -1,0 +1,39 @@
+//Jun/10/2018 ac 12ms beats 89% time O(n)
+//参考了6ms解决方案后的改进
+//这里巧妙地运用了栈内剩余左括号的下角标使程序不需要多次改变左窗口位置，因为每一次匹配到右括号都可以直接算出当前最大的匹配数目
+//
+class Solution {
+public:
+    	int longestValidParentheses(string s) {
+		stack<int> st;
+		int left = -1;
+		int res = 0;
+		for (int i = 0; i < s.size(); i++)
+		{
+			if (s[i] == '(')
+			{
+				st.push(i);
+			}
+			else
+			{
+				if (st.empty())
+				{
+					left = i;
+				}
+				else
+				{
+					st.pop();
+					if (st.empty())				//拿走右括号后，栈内没有剩余，证明匹配到了一个结果
+					{
+						res = max(i - left, res);	//该长度就是目前的下角标和左窗口的距离	
+					}
+					else					//如果栈内还剩余值则目前的最大合法值就是i到栈顶左括号下角标的距离
+					{					//因为此时剩余没有匹配的左括号的下一位，一定是一个已经被匹配的左括号
+						res = max(res, i - st.top());	//所以最大的匹配数目就是i到它下一位的距离，即i-（st.top（）+1）+1
+					}
+				}
+			}
+		}
+		return res;
+	}
+};

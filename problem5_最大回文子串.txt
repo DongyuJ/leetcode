@@ -1,0 +1,50 @@
+//may/24/2018 ac,60ms
+//改造字符串，在每一个字符之间插入#（包括头尾）
+//以每个字符为中心进行一次搜索，包括插入的#，左右两个标记同时推进，若一致则计数器加一（无论奇偶都一样）
+
+
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        int flag = 0;
+    int pr,pl = 0;
+    int rr,rl,rc = 0;
+    string str,res;
+    int i;
+    for(i = 0;i < s.length();i ++)		//添加#
+    {
+        str = str + "#";
+        str = str + s[i];
+    }
+    str = str + "#";
+    //cout<<str<<endl;
+    for(i = 1;i < str.length()-1;i++)
+    {
+            int cont = 0;
+            pr = i + 1;
+            pl = i - 1;
+            while(str[pr] == str[pl]){		//标记与计数器处理
+                cont++;
+                pr++;
+                pl--;
+                if(pr >= str.length() || pl < 0)
+                {
+                    break;
+                }
+            }
+            if(cont > rc)
+            {
+                rr = pr;
+                rl = pl;
+                rc = cont;
+            }
+    }
+
+    for(i = rl + 1;i < rr;i++)
+    {
+        if(i % 2)
+        res += str[i];
+    }
+        return res;
+    }
+};

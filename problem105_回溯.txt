@@ -1,0 +1,57 @@
+//92ms beats 2%
+//利用pre找到根节点（就是第一个数），然后利用inorder 将所有节点分成左右两边（找到根节点，左右两边就是根节点的所有左右子节点）
+//然后分别将左右子节点集传入进行递归，将结果分别连接成该节点的左右子节点。
+//当传入的节点集为空意味着已经到底了，返回NULL即可
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* Builder(vector<int> pre, vector<int> in)
+    {
+        if(pre.empty())
+        {
+            return NULL;
+        }
+        
+        int val = pre[0];
+        TreeNode* T = new TreeNode(val);
+        
+        int cnt = 0;
+        
+        while(in[cnt] != val)
+        {
+            cnt++;
+        }
+        
+        vector<int> pre1,pre2,in1,in2;
+        for(int i = 0; i < cnt; i++)
+        {
+            pre1.push_back(pre[i + 1]);
+            in1.push_back(in[i]);
+        }
+        for(int i = cnt + 1; i < pre.size(); i++)
+        {
+            pre2.push_back(pre[i]);
+            in2.push_back(in[i]);
+        }
+        
+        T->left = Builder(pre1, in1);
+        T->right = Builder(pre2, in2);
+        
+        return T;
+    }
+    
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        TreeNode* root;
+        root = Builder(preorder, inorder);
+        return root;
+    }
+};

@@ -1,0 +1,48 @@
+//Aug/14/2018 ac
+//用map记录每个单词的出现次数，最后再遍历map，输出出现只有一次的单词
+//注意一下map的遍历方式即可
+
+class Solution {
+public:
+    vector<string> uncommonFromSentences(string A, string B) {
+        map<string,int> dict;
+        vector<string> res;
+        string temp;
+        for(int i = 0; i <= A.size(); i++)
+        {
+            if(i == A.size() || A[i] == ' ')
+            {
+                dict[temp]++;
+                temp = "";
+            }
+            else
+            {
+                temp += A[i];
+            }
+        }
+        temp = "";
+        for(int i = 0; i <= B.size(); i++)
+        {
+            if(i == B.size() || B[i] == ' ')
+            {
+                dict[temp]++;
+                temp = "";
+            }
+            else
+            {
+                temp += B[i];
+            }
+        }
+        map<string,int>::iterator it;
+        it = dict.begin();
+        while(it != dict.end())
+        {
+            if(it->second == 1)
+            {
+                res.push_back(it->first);
+            }
+            it++;
+        }
+        return res;
+    }
+};

@@ -1,0 +1,48 @@
+//ac but last 1% Jan/8/2019
+
+//a follow up of problem 122
+//a brute force algo, O(n^2)
+
+//Because we can make two transaction at same time, that means
+//the two transactions we chose are not overlapped in time.
+//So, we just check all possible split point to divide the prices[]
+//into two parts and find the division with max profit
+
+//We could use what we have done in problem 121 to find
+//the best profit in every part.
+//That is to mentain a varible which store the minimum until now
+//and the max profit is the larger between previous largest and 
+//price for now minus minimum.
+
+//the split point is occuring both in the first part and the second
+//Because we can sell and buy in the same intermiddian day.
+//And the split point can be the first and last point which means
+//only divide the prices in one part
+
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        if(prices.size() < 2){
+            return 0;
+        }
+        int res = 0;
+        for(int i = 0; i < prices.size(); i++){
+            int minimum = prices[0];
+            int best_price1 = 0;
+            for(int j = 1; j <= i; j++){
+                minimum = min(minimum, prices[j]);
+                best_price1 = max(best_price1, prices[j] - minimum);
+            }
+            
+            minimum = prices[i];
+            int best_price2 = 0;
+            for(int j = i + 1; j < prices.size(); j++){
+                minimum = min(minimum, prices[j]);
+                best_price2 = max(best_price2, prices[j] - minimum);
+            }
+            
+            res = max(res, best_price1 + best_price2);
+        }
+        return res;
+    }
+};

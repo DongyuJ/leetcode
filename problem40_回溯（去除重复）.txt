@@ -1,0 +1,53 @@
+//Jun/15/2018 ac 72ms last 2%
+//与上一题几乎一样，唯一新加的要求是每个数字只能用一次，这样的话，我们每次都需要传入至少下一层的数字
+//还会遇到一个问题：之前由于一个数字只会出现一次，而现在，数字有可能重复，所以为了使结果不重复如{1，1，1，2，3}，target=5 所以我们在
+//将temp打入res之前需要先检测之前的res有没有与之重复的，vector容器可以直接使用等号进行判断
+
+class Solution {
+public:
+    void backtracking(vector<int>& candidates, vector<vector<int>> &res, int target, int sum, vector<int> temp, int cnt)
+{
+	if (sum == target)
+	{
+		int flag = 1;
+		for (int j = 0; j < res.size(); j++)						//判断是否与之前结果重复
+		{
+			if (temp == res[j])
+			{
+				flag = 0;
+				break;
+			}
+		}
+		if(flag)
+			res.push_back(temp);
+		return;
+	}
+	else if (sum > target)
+	{
+		return;
+	}
+	else
+	{
+		for (int i = cnt; i < candidates.size(); i++)
+		{
+			temp.push_back(candidates[i]);
+			if (temp.size() == 1 && i != 0 && candidates[i] == candidates[i - 1])	//若第一个数就与前一个数一样，必然会重复，直接跳过
+			{
+				temp.pop_back();						//清空temp
+				continue;
+			}
+			backtracking(candidates, res, target, sum + candidates[i], temp, i + 1);
+			temp.pop_back();
+		}
+	}
+
+}
+
+vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+	vector<vector<int>> res;
+	vector<int> temp;
+	sort(candidates.begin(), candidates.end());
+	backtracking(candidates, res, target, 0, temp, 0);
+	return res;
+}
+};

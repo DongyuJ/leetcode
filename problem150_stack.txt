@@ -1,0 +1,56 @@
+//用栈结构很容易解决，遇到数字打入栈，遇到符号处理栈顶两位
+//要注意：1.数据类型，longlong， int会越界
+//	 2.string2int 的时候注意负数，用sign=-1 或 +1即可解决
+
+class Solution {
+public:
+    long long string2number(string s){
+        long number = 0;
+        int sign = 1;
+        int start = 0;
+        if(s[0] == '-'){
+            sign = -1;
+            start = 1;
+        }
+        for(int i = start; i < s.size(); i++){
+            number *= 10;
+            number += ((s[i] - '0') * sign);
+        }
+        
+        return number;
+    }
+    
+    int evalRPN(vector<string>& tokens) {
+        if(tokens.size() == 0){
+            return 0;
+        }
+        
+        stack<long long> equation;
+        
+        for(int i = 0; i < tokens.size(); i++){
+            if(tokens[i] != "+" && tokens[i] != "-" && tokens[i] != "*" && tokens[i] != "/"){
+                equation.push(string2number(tokens[i]));
+            }
+            else{
+                long long b = equation.top();
+                equation.pop();
+                long long a = equation.top();
+                equation.pop();
+                
+                if(tokens[i] == "+"){
+                    equation.push(a + b);
+                }
+                else if(tokens[i] == "-"){
+                    equation.push(a - b);
+                }
+                else if(tokens[i] == "*"){
+                    equation.push(a * b);
+                }
+                else{
+                    equation.push(a / b);
+                }
+            }
+        }
+        return (int)equation.top();
+    }
+};

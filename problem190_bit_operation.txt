@@ -1,0 +1,23 @@
+//位操作与之前的不太一样需要注意按位运算
+
+//这里建立一个mask=00...01，每次用&操作取出n右移i位后的第一位
+//将原有结果左移一位后加上新的第一位
+
+//其实就类似十进制中反转一个数的话，我们每次取原数个位
+//用结果×10加上这个数直到原数所有位都加到了新的数字上
+
+class Solution {
+public:
+    uint32_t reverseBits(uint32_t n) {
+        uint32_t mask = 1;
+        uint32_t result = 0;
+        
+        for(int i = 0; i < 32; i++){
+            result = result << 1;
+            result += (mask & (n >> i));
+            // cout<<result<<endl;
+        }
+        
+        return result;
+    }
+};

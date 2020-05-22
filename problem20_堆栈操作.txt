@@ -1,0 +1,42 @@
+//may/31/2018 ac 4ms beats 95%
+//运用堆栈可以极大的简化逻辑，遇到左半边括号先打入栈内，因为可以嵌套但是不允许错位，所以只需要在遇到右括号时检测栈顶即可，如果是嵌套，必然从最内层开始
+//组成一对，也就是栈顶所存的另外半个括号，如果不匹配，即返回0；注意，使用st.top（）之前务必保证栈内已有元素
+
+class Solution {
+public:
+    bool isValid(string s) {
+	stack<char> st;
+	for (int i = 0; i < s.size(); i++)
+	{
+		if (s[i] == '{' || s[i] == '[' || s[i] == '(')
+		{
+			st.push(s[i]);
+		}
+		else
+		{
+			if (st.empty())
+			{
+				return 0;
+			}
+			else if(s[i] == '}' && st.top() != '{')
+			{
+				return 0;
+			}
+			else if (s[i] == ']' && st.top() != '[')
+			{
+				return 0;
+			}
+			else if (s[i] == ')' && st.top() != '(')
+			{
+				return 0;
+			}
+			else
+			{
+				st.pop();
+			}
+		}
+	}
+	return st.empty();
+}
+
+};

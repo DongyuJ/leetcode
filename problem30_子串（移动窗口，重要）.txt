@@ -1,0 +1,102 @@
+//Jun/9/2018 ac 226ms beats 44%
+
+
+//本题利用移动窗口和巧妙地字符分割完成（很好用也很常见的方法，非常重要）
+
+//首先，由于给出的words里面的单词都是定长的，所以遍历完所有s的次数就和字长一样，因为以words常长为3举例：
+//s[] = {"abcdefghijkl"} => 只需要三次分割就可以遍历所有情况 abc|def|ghi|jkl => bcd|efg|hij => cde|fgh|ijk
+
+//接下来只需要在这些序列中分辨出符合题目要求的子序列，与之前查找子序列的题目十分类似。
+//为了更快的查找单词以及对应数量，我建立了两个map，一个为题目给出的words，存在tdic中val为int型，表示其出现次数，而dic是tdic的一个是复制，
+//再循环中，如果查询到某单词，并成功对应，将其val递减。
+
+//pr，pi两个指针实际上是一个移动窗口，pr指向左边界，pi向右移动，寻找符合条件的单词，如果寻找失败了，酌情移动左右窗口。当左窗口到s的右边界距离不足
+//dic中单词展开长度时，停止。注意，每次成功找到之后不能直接跳出，因为需要在查找后续单词是否符合。
+
+////////////////////寻找失败的条件////////////////////////////////
+
+//1.因为中间不能插入不存在的单词，所以这是一种失败情况，若检测到下一个划分的单词不再字母表中，可以直接将左右窗口移动到该单词的下一个，
+//因为夹着这个单词都不可能符合条件
+
+//2.单词查找成功，但是其数量已经用完（每次寻找成功会对相应单词递减已确定是否用完），这种情况需要找到这个单词上一次出现的地方，
+//将左窗口重置到那个地方（这里可以不重置右窗口，只改变计数器的值，当时做题的时候没有考虑到）
+
+
+class Solution {
+public:
+    vector<int> findSubstring(string s, vector<string>& words) {
+	vector<int> res;
+	if (words.size() < 1 || s.size() < words.size() * words[0].size())  //s长度不足直接输出空
+	{
+		return res;
+	}
+	map<string, int> dic;
+	map<string, int> tdic;
+	for (int i = 0; i < words.size(); i++)				//将words存放到map中，方便查找
+	{
+		if (dic.count(words[i]) != 0)
+		{
+			dic[words[i]]++;
+		}
+		else
+		{
+			dic[words[i]] = 1;
+		}
+	}
+	tdic = dic;
+	string curWord,preWord;						//两个取词器运用substr可以很方便的取到string 的子串
+	int l = words[0].size();					//之所以要用两个是为了在移动左窗口的时候以当前词作比较
+	int max = words.size();						//max记录最大单词数，达到这个数目意味着一次匹配成功了，记录结果，进行下一次
+	int pi, pr;
+	for (int i = 0; i < l; i++)
+	{
+		pi = i;							//初始化
+		pr = i;
+		int cnt = 0;
+		dic = tdic;
+		while (pi <= s.size() - l && s.size() - pr >= words.size() * words[0].size())	//这里的逻辑有一点问题，应该只需要后面的即可
+		{
+			curWord = s.substr(pi, l);
+			if(dic.count(curWord) != 0)			//注意，用count避免查找的时候创建关键字
+			{
+				if (dic[curWord] != 0)			//单词匹配成功且没有用完
+				{
+					dic[curWord]--;
+					pi = pi + l;			//移动右窗口
+					cnt++;
+				}
+				else
+				{
+					preWord = s.substr(pr, l);	//这意味着有一个词虽然存在，但是已经超过了次数
+					while (preWord != curWord)	//查找这个词的上一次出现，从这后面一个词在开始查找
+					{
+						pr += l;
+                        			preWord = s.substr(pr,l);
+					}
+					pr += l;			//这里的效率不是最高，应该不移动右窗口的
+					pi = pr;
+					cnt = 0;
+					dic = tdic;
+					//cout << pi << " " << pr << endl;
+				}
+			}
+			else						//取到的词不存在的情况，这里需要跳过这个不存在的词
+			{
+				pi = pi + l;
+				pr = pi;
+				cnt = 0;
+				dic = tdic;
+			}
+			if (cnt == max)					//一次匹配成功，注意不要直接结束了，后续还可能匹配成功
+			{
+				res.push_back(pr);			//而且不能直接将左窗口移动到当前右窗口，因为，这些单词可以重复利用
+				cnt = 0;
+				pi = pr + l;
+				pr = pi;
+				dic = tdic;
+			}
+		}
+	}
+	return res;
+}
+};

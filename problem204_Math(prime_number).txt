@@ -1,0 +1,42 @@
+//比较简单的方法就是从2查到根号n，这样是O（n^2）复杂度
+//另一种方法是将所有的合数利用乘积的方法找出来
+
+//比如2*2 2*3.。。。然后将已知合数在numlist中记录为1
+
+//这里有两个需要注意的
+
+//1.
+//当我们遍历到一个已经确定是合数的数，他的倍数一定已经被标记过了
+//当我们标记他的因数时进行过标记了
+
+//2.
+//我们只需要从某个数的平方开始向后找倍数，因为这之前已经被标记过了
+//比如5， 5 * 2已经在2 * 5 的时候进行过标记，从5*5开始即可
+
+class Solution {
+public:
+    int countPrimes(int n) {
+        int cnt = 0;
+        
+        vector<bool> numList(n, 0);
+        
+        for(int i = 2; i * i < n; i++){
+            //Already computed
+            if(numList[i]){
+                continue;
+            }
+            for(int j = i * i; j < n; j += i){
+                numList[j] = 1;
+            }
+        }
+        
+        int count = 0;
+        for(int i = 2; i < n; i++){
+            if(!numList[i]){
+                count++;
+            }
+        }
+        
+        return count;
+    }
+};

@@ -1,0 +1,63 @@
+//Jun/3/2018 ac 706ms (可能是最慢的一个)
+//有一种较好的方法是，利用之前写过的合并两条链表，将每一条链表与结果链表进行合并，效率可以提高很多
+
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        ListNode* m = NULL;
+        m = new ListNode(-1);					//新建一个头结点
+        ListNode* pi = m;
+        int mini;
+        int flag = 1;
+        if(lists.empty())                       //lists 为空的特殊情况
+        {
+            return m -> next;
+        }
+        int judge = 0;                          //lists不为空，但是里面的链表全部为空的情况
+        for(int i = 0; i < lists.size(); i++)
+        {
+            if(lists[i] != NULL)
+            {
+                judge = 1;
+                break;
+            }
+        }
+        while(flag && judge){
+            mini = 0;
+            for(int i = 0; i < lists.size(); i++)
+            {
+                if(lists[i] == NULL)            //跳过已经结束的链表
+                {
+                    if(i == mini)               //为了不影响maxi的初始化（不能初始化为已经结束的链表）
+                    {
+                        mini++;
+                    }
+                    continue;
+                }
+                if(lists[i] -> val < lists[mini] -> val)
+                {
+                    mini = i;
+                }
+            }
+            pi -> next = lists[mini];
+            lists[mini] = lists[mini] -> next;
+            pi = pi -> next;
+            flag = 0;                                   //只要还有一个链表还有值，就继续运行
+            for(int i = 0; i < lists.size(); i++)
+            {
+                if(lists[i] != NULL)
+                {flag = 1;}
+            }
+        }
+        return m -> next;
+    }
+};

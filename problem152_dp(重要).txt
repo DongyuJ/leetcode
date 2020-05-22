@@ -1,0 +1,36 @@
+//暴力搜索会超时
+//还有一个类似的题目，也可以用dp解
+//如果是求最大的连续子序列的和，我们只需要记录local max和
+//global max，每一步，local max=max（local max， local max + cur）
+//然后 global max = max（global max， local max）
+//这里是因为，如果前面的和加上自己还比自身小，就可以重新开始计算了
+
+//而乘法不一定，所以我们还要记录一个local min。然后每一步
+//都从{cur，cur*local max， cur * local min}中选取最大最小更新
+
+//同时用global max记录着所有出现过的local max中最大值
+
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+        if(nums.size() == 1){
+            return nums[0];
+        }
+        
+        int global_max = nums[0];
+        
+        int local_max = nums[0];
+        int local_min = nums[0];
+        
+        for(int i = 1; i < nums.size(); i++){
+            int local_max_c = local_max;
+            
+            local_max = max(max(local_max * nums[i], nums[i]), local_min * nums[i]);
+            local_min = min(min(local_max_c * nums[i], nums[i]), local_min * nums[i]);
+            
+            global_max = max(global_max, local_max);
+        }
+        
+        return global_max;
+    }
+};

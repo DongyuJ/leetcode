@@ -1,0 +1,49 @@
+//Jul/29/2018 1.TLE 2.ac
+//傻不拉几的用回溯写了半天，一边写一边觉得有点奇怪，总觉的想不到不成功的情况，也没在意，结果写完超时了，抱着试一试的态度直接提交了直接返回1，结果过了orz
+//回溯的话就是轮到Alex的时候只要有其中一种方法使他获胜就返回1，而对于Lee来说必须要两种都成功（这里指的成功是Alex赢）才能算成功。
+//a,b分别为起点和终点，通过b-a的奇偶性来判断是谁的轮次
+
+1.
+class Solution {
+public:
+    bool backtracking(vector<int>& piles, int a, int b, int leads)
+    {
+        if(b - a == 1)
+        {
+            leads += abs(piles[a] - piles[b]);
+            return leads > 0;
+        }
+        if((b - a) % 2 != 0)
+        {
+           if(backtracking(piles, a+1, b, leads + piles[a]) || backtracking(piles, a, b-1, leads + piles[b]))
+           {
+               return true;
+           }
+            return false;
+        }
+        else
+        {
+            if(backtracking(piles, a+1, b, leads - piles[a]) && backtracking(piles, a, b-1, leads - piles[b]))
+            {
+                return true;
+            }
+            return false;
+        }
+    }
+    
+    bool stoneGame(vector<int>& piles) {
+        if(piles.size() == 2)
+        {
+            return true;
+        }
+        return backtracking(piles, 0, piles.size()-1, 0);
+    }
+};
+
+2.
+class Solution{
+public:
+	bool stoneGame(vector<int>& piles)
+	{
+		return 1;
+	}

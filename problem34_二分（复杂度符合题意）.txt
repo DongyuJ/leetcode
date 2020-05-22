@@ -1,0 +1,48 @@
+//Jun/12/2018 ac 14ms O(log(n))
+//虽然比上一个耗时更长，但是这个才是时间复杂度较低的算法
+//思路就是两次二分，分别找到左右端点，即找到了目标也不停止，而是继续，寻找左边界就继续向左找，右边界就向右找，这样能直接找到两个边界
+
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+	vector<int> res = {-1,-1};
+	if (nums.empty())
+	{
+		return res;
+	}
+	int left_l = 0;
+	int right_l = nums.size() - 1;
+	while (left_l <= right_l)
+	{
+		int mean = (left_l + right_l) >> 1;
+		if (target <= nums[mean])
+		{
+			right_l = mean - 1;
+		}
+		else
+		{
+			left_l = mean + 1;
+		}
+	}
+	int left_r = 0;
+	int right_r = nums.size() - 1;
+	while (left_r <= right_r)
+	{
+		int mean = (left_r + right_r) >> 1;
+		if (target < nums[mean])
+		{
+			right_r = mean - 1;
+		}
+		else
+		{
+			left_r = mean + 1;
+		}
+	}
+	if (left_l <= right_r)
+	{
+		res[0] = left_l;
+		res[1] = right_r;
+	}
+	return res;
+}
+};

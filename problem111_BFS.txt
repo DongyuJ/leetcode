@@ -1,0 +1,53 @@
+//sep/19/2018 ac 
+//重要，第一次使用BFS，在搜索树的最浅深度还是可以提高效率的
+//BFS使用队列解，每次压入队尾，DFS是栈（递归就是栈的一种），每次压入栈首
+//暂时还没搞懂如果用BFS如何方便的记录当前层数，本题使用的方法是，用两个队列，一个记录当前，一个记录下一层
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int minDepth(TreeNode* root) {
+        if(!root)
+        {
+            return 0;
+        }
+        queue<TreeNode*> T;
+        queue<TreeNode*> T_next;
+        T.push(root);
+        int deep = 1;
+        while(1)
+        {
+            if(T.front() == NULL)	//注意这边，一开始用的continue，后来发现这样不行，如果本层最后一个队列元素是NULL，就没法进入T空的处理了
+            {
+                T.pop();
+            }
+            else if((!T.front()->left) && (!T.front()->right))
+            {
+                return deep;
+            }
+            else
+            {
+                T_next.push(T.front()->left);
+                T_next.push(T.front()->right);
+                T.pop();
+            }
+            if(T.empty())
+            {
+                T = T_next;
+                while(!T_next.empty())
+                {
+                    T_next.pop();
+                }
+                deep++;
+            }
+        }
+    }
+};

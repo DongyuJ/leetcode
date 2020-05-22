@@ -1,0 +1,31 @@
+//Aug/27/2018 ac 8ms beats 11%
+//来美国之后速度都偏慢，不知道是不是服务器的问题
+//DFS遍历一次即可
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int DFS(TreeNode* T, int layer, int depth)
+    {
+        if(T == NULL)
+        {
+            return max(depth,layer);
+        }
+        else
+        {
+            return max(DFS(T->left, layer + 1, depth), DFS(T->right, layer + 1, depth));
+        }
+    }
+    
+    int maxDepth(TreeNode* root) {
+        return DFS(root,0,0);
+    }
+};

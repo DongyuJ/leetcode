@@ -1,0 +1,57 @@
+//ac Jan/11/2019
+//Got the idea from internet, still not formilier with recursively solve
+//the problem
+
+//the idea is that every path have only one root, so, we recursively
+//solve the largest value of every node if they are not root(add
+//the larger one of the childrens value as a node(and it needs to
+//be greater than 0)).
+
+//And use another global variable to save the largest sum
+//every time, try to add the current node->val to compare with
+//the largest sum and at last the sum is what we want to find
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int res = INT_MIN;
+    
+    int solver(TreeNode* T){
+        if(T == NULL){
+            return 0;
+        }
+        
+        int cur = T->val;
+        int left = solver(T->left);
+        int right = solver(T->right);
+        
+        cur += max(0, left);
+        cur += max(0, right);
+        if(cur > res){
+            res = cur;
+        }
+        
+        cur = T->val;
+        cur += max(0, max(left, right));
+        
+        return cur;
+    }
+    
+    int maxPathSum(TreeNode* root) {
+        if(root == NULL){
+            return 0;
+        }
+        
+        solver(root);
+        
+        return res;
+    }
+};

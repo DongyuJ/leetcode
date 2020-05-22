@@ -1,0 +1,64 @@
+//看了提示才想到的dp，建立一个二维的dp表，每个点代表
+//以这个点为右下角的正方形有多大
+
+//首先必须要这个点自己是1，
+//其次，如果它的上，左以及上左方向都0，那么这个点代表的正方形
+//边长就是上，左，上左中最小的一个加一
+//如果这三个方向有一个为0， 那么这个点代表的正方形边长就是1
+//最后遍历整个dp表，返回最大值的平方
+
+//注意，1.这道题是以char类型给的matrix，很坑
+// 2. 初始化需要将第一行第一列初始化
+
+class Solution {
+public:
+    int maximalSquare(vector<vector<char>>& matrix) {
+        if(matrix.size() == 0 || matrix[0].size() == 0){
+            return 0;
+        }
+        
+        if(matrix.size() == 1 || matrix[0].size() == 1){
+            for(int i = 0; i < matrix.size(); i++){
+                for(int j = 0; j < matrix[0].size(); j++){
+                    if(matrix[i][j] == '1'){
+                        return 1;
+                    }
+                }
+            }
+            return 0;
+        }
+        
+        vector<vector<int>> nums(matrix.size());
+        for(int i = 0; i < matrix.size(); i++){
+            nums[i].resize(matrix[i].size(), 0);
+        }
+        for(int i = 0; i < matrix[0].size(); i++){
+            nums[0][i] = matrix[0][i] - '0';
+        }
+        for(int i = 0; i < matrix.size(); i++){
+            nums[i][0] = matrix[i][0] - '0';
+        }
+        
+        for(int i = 1; i < nums.size(); i++){
+            for(int j = 1; j < nums[i].size(); j++){
+                if(matrix[i][j] == '1'){
+                    if(nums[i][j - 1] != 0 && nums[i - 1][j] != 0 && nums[i - 1][j - 1] != 0){
+                        nums[i][j] = min(nums[i - 1][j] , min(nums[i][j - 1], nums[i - 1][j - 1]))+ 1;
+                    }
+                    else{
+                        nums[i][j] = 1;
+                    }
+                }
+            }
+        }
+        
+        int maximum = 0;
+        for(int i = 0; i < nums.size(); i++){
+            for(int j = 0; j < nums[i].size(); j++){
+                maximum = max(maximum, nums[i][j]);
+            }
+        }
+        
+        return maximum * maximum;
+    }
+};

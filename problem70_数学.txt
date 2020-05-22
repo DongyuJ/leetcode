@@ -1,0 +1,16 @@
+//Jun/30/2018 ac 3ms beats 97%
+//每一节楼梯都只有可能由前一节或者两节楼梯走到，所以我们可以写出递推函数，f（n） = f（n-1）+f（n-2）
+
+class Solution {
+public:
+    int climbStairs(int n) {
+        vector<int> res(n);
+        res[0] = 1;
+        res[1] = 2;
+        for(int i = 2; i < n; i++)
+        {
+            res[i] = res[i - 1] + res[i - 2];
+        }
+        return res[n-1];
+    }
+};

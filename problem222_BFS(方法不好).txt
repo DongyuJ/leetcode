@@ -1,0 +1,39 @@
+//很蠢的bfs把节点都数一遍
+
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int countNodes(TreeNode* root) {
+        queue<TreeNode*> q;
+        
+        if(!root){
+            return 0;
+        }
+        
+        q.push(root);
+        int n = 0;
+        
+        while(!q.empty()){            
+            TreeNode* t = q.front();
+            if(!t) {
+                q.pop();
+                continue;
+            }
+            q.pop();
+            n++;
+            q.push(t->left);
+            q.push(t->right);
+        }
+        
+        return n;
+    }
+};

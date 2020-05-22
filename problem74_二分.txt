@@ -1,0 +1,41 @@
+//Jul/2/2018 ac 13ms beats 71%
+//二分查找的变形，将坐标转化成一个数字，进行比较的时候在还原回去
+
+class Solution {
+public:
+    bool binary(int left, int right, int target, vector<vector<int>>& matrix)
+    {
+        int mean = (left + right) / 2;
+        int row = mean / matrix[0].size();
+        int col = mean % matrix[0].size();
+        if(target == matrix[row][col])
+        {
+            return 1;
+        }
+        if(left > right)
+        {
+            return 0;
+        }
+        if(target > matrix[row][col])
+        {
+            return binary(mean + 1,right,target,matrix);
+        }
+        else
+        {
+            return binary(left,mean - 1,target,matrix);
+        }
+    }
+    
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        if(matrix.empty() || matrix[0].empty())
+        {
+            return 0;
+        }
+        
+        int m = matrix.size();
+        int n = matrix[0].size();
+        int maxpoint = m * n - 1;
+        bool res = binary(0,maxpoint,target,matrix);
+        return res;
+    }
+};

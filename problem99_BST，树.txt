@@ -1,0 +1,88 @@
+//Aug/9/2018 ac 44ms beats 17% 但是看了一下前面的做法都没有遵守题目要求用的递归，空间复杂度O（n）
+//学习了一种非递归的遍历二叉树的方式，morris_travel，这是一种空间复杂度为常数空间的遍历方法，要点就是通过一个先行指针，将下一步向左走后的回溯点先连起来，
+//再走出每一步，具体的方法和解析在树的文件夹中的word文档
+
+//这道题利用了一个BST的特性，即，前序遍历得到的数组应该是一个非递减数组，所以我们第一次遍历，获得所有节点的值，并记录，
+//然后对这些值进行一个排序，再第二次遍历，将值按顺序填入，就是标准的BST了，可以应对任意个数字不正确的BST
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void recoverTree(TreeNode* root) {
+        TreeNode* pre = NULL;
+        TreeNode* cur = root;
+        vector<int> record;
+        
+        while(cur != NULL)
+        {
+            if(cur->left == NULL)
+            {
+                record.push_back(cur->val);
+                cur = cur->right;
+            }
+            else
+            {
+                pre = cur->left;
+                while(pre->right != NULL && pre->right != cur)
+                {
+                    pre = pre->right;
+                }
+                if(pre->right == NULL)
+                {
+                    pre->right = cur;
+                    cur = cur->left;
+                }
+                else
+                {
+                    pre->right = NULL;
+                    record.push_back(cur->val);
+                    cur = cur->right;
+                }
+            }
+        }
+        
+        sort(record.begin(), record.end());
+        int cnt = 0;
+        
+        cur = root;
+        pre = NULL;
+        
+        while(cur != NULL)
+        {
+            if(cur->left == NULL)
+            {
+                cur->val = record[cnt];
+                cnt++;
+                cur = cur->right;
+            }
+            else
+            {
+                pre = cur->left;
+                while(pre->right != NULL && pre->right != cur)
+                {
+                    pre = pre->right;
+                }
+                if(pre->right == NULL)
+                {
+                    pre->right = cur;
+                    cur = cur->left;
+                }
+                else
+                {
+                    pre->right = NULL;
+                    cur->val = record[cnt];
+                    cnt++;
+                    cur = cur->right;
+                }
+            }
+        }
+    }
+};

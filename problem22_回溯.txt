@@ -1,0 +1,20 @@
+//jun/1/2018 ac 3ms 参考网上代码
+//注意回溯和递归的区别，本题中，无条件的先写入左括号，当产生合理解之后程序回溯到最后一个左括号之前，并尝试写下右括号，再进行判断
+//注意，回溯不是将后面的情况再次带入，而是随着一次运行成功后记录完毕，并因为函数运行结束会回到之前的函数中，执行后面的语句，除非特殊情况，不然不需要返回
+class Solution {
+public:
+    void generateParenthesisDFS(int left, int right, string out, vector<string> &res) {
+	    if (left > right) return;									//一定错误，直接回到上一次写入之前
+	    if (left == 0 && right == 0) res.push_back(out);			//找到合理解，会回溯到上一次写入左括号，而后运行下一条语句，即写入右括号
+	    else {
+		    if (left > 0) generateParenthesisDFS(left - 1, right, out + '(', res);		//先尝试左括号
+		    if (right > 0) generateParenthesisDFS(left, right - 1, out + ')', res);		//右括号在下面，回溯回来之后会运行
+	    }
+    }
+    
+    vector<string> generateParenthesis(int n) {
+	    vector<string> res;
+	    generateParenthesisDFS(n, n, "", res);
+	    return res;
+    }
+};

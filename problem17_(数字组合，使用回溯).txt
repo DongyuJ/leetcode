@@ -1,0 +1,70 @@
+//Jun/1/2018 ac 3ms beats 91%
+//练习回溯的方法
+//words 将数字转换为了字母的组合，方便后续使用，temp（backtracking中）用于记录当前字符串，当长度达到预期后记录在res中
+
+//类似于树的遍历，先从最左边遍历到最下层，当temp长度与words，说明取得一个答案，返回上一层，此时会执行for循环的下一层，即每一个字母组合都会遍历
+//按照树状图理解，就是程序会在达到根部之后返回上一个节点并且向下一个子节点开始搜索（如果没有下一个子节点，再次返回上一个父节点）
+//注意，temp值不能在函数中改变，不然返回后没有办法回溯到之前的状态，应该在传入函数的时候改变。
+//注意，需要保存结果的数组要传入地址进行操作，以免回溯的时候数值丢失
+
+class Solution {
+public:
+    void backtracking(vector<string> words, vector<string> &res, string temp)//这里的res一定要取地址，不然每一次回溯都会丢失当前已经保存的res值
+{
+	if (temp.size() == words.size())
+	{
+		res.push_back(temp);
+		return;
+	}
+	else
+	{
+		for (int i = 0; i < words[temp.size()].size(); i++)
+		{
+			//temp += words[temp.size()][i];
+			backtracking(words, res, temp + words[temp.size()][i]);//上面注释掉的部分是错误实例，这样回溯之后temp值仍然是之前的状态。
+		}
+	}
+}
+
+vector<string> letterCombinations(string digits) {
+	vector<string> words;
+	vector<string> res;
+	if (digits.empty())
+	{
+		return res;
+	}
+	for (int i = 0; i < digits.size(); i++)
+	{
+		string temp;
+		switch (digits[i]) {
+		case '2':
+			temp = "abc";
+			break;
+		case '3':
+			temp = "def";
+			break;
+		case '4':
+			temp = "ghi";
+			break;
+		case '5':
+			temp = "jkl";
+			break;
+		case '6':
+			temp = "mno";
+			break;
+		case '7':
+			temp = "pqrs";
+			break;
+		case '8':
+			temp = "tuv";
+			break;
+		case '9':
+			temp = "wxyz";
+			break;
+		}
+		words.push_back(temp);
+	}
+	backtracking(words,res,"");
+	return res;
+}
+};

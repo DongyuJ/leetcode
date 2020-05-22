@@ -1,0 +1,36 @@
+//如果用递归做会超时，用dp可以省去很多不必要的计算。
+//策略是， 对于某一个位置i，遍历i前面的每一个字符，如果该字符
+//dp表记为1而且s（i，j）存在字典中，就将dp[i]记为1
+
+//就是说，dp的每一位代表从头开始，到该位是否能被分段
+//初始化：将第0位记为1，任何能从第0位直接分段的部份代表从0到
+//该位存在在字典中
+
+class Solution {
+public:
+    bool wordBreak(string s, vector<string>& wordDict) {
+        vector<bool> dp;
+        dp.resize(s.size() + 1, false);
+        dp[0] = 1;
+        
+        for(int i = 1; i <= s.size(); i++){
+            int flag = 0;
+            for(int j = 0; j < i; j++){
+                if(dp[j] == 1){
+                    string seg = s.substr(j, i - j);
+                    for(int k = 0; k < wordDict.size(); k++){
+                        if(seg == wordDict[k]){
+                            dp[i] = 1;
+                            flag = 1;
+                            break;
+                        }
+                    }
+                    if(flag){
+                        break;
+                    }
+                }
+            }
+        }
+        return dp[s.size()];
+    }
+};

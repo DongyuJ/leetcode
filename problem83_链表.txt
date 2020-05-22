@@ -1,0 +1,33 @@
+//Jul/21/2018 ac 8ms beats 98%
+//上一题的简化版本，由于只需要去掉重复部分，所以遇到重复部分将当前节点连向下下个节点即可，不需要判断头结点和处理一大堆的边界问题
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        if(head == NULL || head->next == NULL)
+        {
+            return head;
+        }
+        ListNode* l = head;
+        while(l->next != NULL)
+        {
+            if(l->val == l->next->val)
+            {
+                l->next = l->next->next;
+            }
+            else
+            {
+                l = l->next;
+            }
+        }
+        return head;
+    }
+};

@@ -1,0 +1,50 @@
+//may/28/2018 ac 131ms
+//疑问：push_back问题
+//先进行排序，然后确定一个值，再寻找两个符合条件的值，为了避免重复这两个值一定在固定值得右边。
+//然后就是通过双指针方式遍历，注意通过检测重复来避免重复，这里有几个特殊情况
+//（1）固定值与第一个左指针重复，这是允许的（2）注意判断重复时不要越界访问
+//还有一个优化，固定值必然小于等于0
+class Solution {
+public:
+    vector<vector<int> > threeSum(vector<int>& nums){
+    vector<vector<int> > res;
+    sort(nums.begin(),nums.end());
+    int pi,bi;
+        if(!nums.size())
+        {return res;}
+    for(int i = 0;nums[i] <= 0;i++)
+    {
+        //cout<<i;
+        if(i != 0 && nums[i] == nums[i - 1])
+        {
+            continue;
+        }
+        pi = i + 1;
+        bi = nums.size() - 1;
+        while(pi < bi){
+            //cout<<k;
+            if(nums[i] + nums[pi] + nums[bi] == 0)
+            {
+                res.push_back({nums[i], nums[pi], nums[bi]});
+                pi++;
+                bi--;
+            }
+            else if(nums[i] + nums[pi] + nums[bi] < 0)
+            {
+                pi++;
+            }
+            else
+            {
+                bi--;
+            }
+            while(pi - 1 != i && nums[pi - 1] == nums[pi]){			//重复判断
+                pi++;
+            }
+            while((bi != nums.size() - 1) && (nums[bi + 1] == nums[bi])){	//边界处理
+                bi--;
+            }
+        }
+    }
+    return res;
+}
+};

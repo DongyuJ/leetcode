@@ -1,0 +1,49 @@
+//Jun/24/2018 ac 4ms beats 86%
+//与51一致，只是将输出结果改成了输出个数，所以直接在每次成功后计数器加一即可，这里使用了取地址符，使结果可以在原数据上进行改动
+
+class Solution {
+public:
+    void backtracking(int& res, vector<string>& temp, int n, int layer, vector<bool>& row, vector<bool>& leftup, vector<bool>& rightup)
+{
+	if (layer == n)
+	{
+		res++;
+		return;
+	}
+	
+	//int flag = 1;
+	for (int i = 0; i < n; i++)
+	{
+		if (!row[i] && !leftup[layer - i + n] && !rightup[layer + i])
+		{
+			temp[layer][i] = 'Q';
+			row[i] = 1;
+			leftup[layer - i + n] = 1;
+			rightup[layer + i] = 1;
+			backtracking(res, temp, n, layer + 1, row, leftup, rightup);
+			row[i] = 0;
+			leftup[layer - i + n] = 0;
+			rightup[layer + i] = 0;
+			temp[layer][i] = '.';
+		}
+	}
+}
+
+	int totalNQueens(int n) {
+	int res = 0;
+	vector<string> temp(n);
+	vector<bool> row(n, 0);
+	vector<bool> leftup(2*n,0);
+	vector<bool> rightup(2*n, 0);
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			temp[i] += '.';
+		}
+	}
+	backtracking(res, temp, n, 0, row, leftup, rightup);
+
+	return res;
+}
+};

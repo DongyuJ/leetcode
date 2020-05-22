@@ -1,0 +1,49 @@
+//June/26/2018 ac 8ms last 10%
+//每一次放数字的时候先看指针目前在那一条边上，然后放了数字再操作指针，并记录圈数在loop中，这里注意，第一个指针，设为-1-1，loop也设为-1
+//这样可以统一在之后的每一圈当pi，pj同时等于loop时进入到下一圈并存放数字。
+
+vector<vector<int>> generateMatrix(int n) {
+	vector<vector<int>> res(n);
+	for (int i = 0; i < n; i++)
+	{
+		res[i].resize(n);
+	}
+	int pi = -1;
+	int pj = -1;
+	int loop = -1;
+	for (int i = 0; i < n*n; i++)
+	{
+		if (pi == loop && pj == loop)
+		{
+			pi++;
+			pj++;
+			loop++;
+			res[pi][pj] = i + 1;
+		}
+		if (pi == loop && pj != n - loop - 1)
+		{
+			res[pi][pj] = i + 1;
+			pj++;
+			continue;
+		}
+		if (pj == n - loop - 1 && pi != n - loop - 1)
+		{
+			res[pi][pj] = i + 1;
+			pi++;
+			continue;
+		}
+		if (pi == n - loop - 1 && pj != loop)
+		{
+			res[pi][pj] = i + 1;
+			pj--;
+			continue;
+		}
+		if (pj == loop && pi != loop)
+		{
+			res[pi][pj] = i + 1;
+			pi--;
+			continue;
+		}
+	}
+	return res;
+}

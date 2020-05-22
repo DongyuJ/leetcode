@@ -1,0 +1,26 @@
+//ac Jan/7/2019 
+//related to problem 121
+//In this problem, we keep finding the lowest price, but
+//every time we find a price higher than the lowest price for now
+//sell it and change the lowest price to current price
+
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        if(prices.empty()){
+            return 0;
+        }
+        int res = 0;
+        int minimum = prices[0];
+        for(int i = 1; i < prices.size(); i++){
+            if(prices[i] < minimum){
+                minimum = prices[i];
+            }
+            if(prices[i] > minimum){
+                res += prices[i] - minimum;
+                minimum = prices[i];
+            }
+        }
+        return res;
+    }
+};

@@ -1,0 +1,31 @@
+//Jun/27/2018 ac 10ms beats 95%
+//dp数组初始化为grid数组，先处理第一列和第一行，每个位置为当前位置加上上一个位置的和
+//而后从（1,1）开始遵循grid[i][j] += min(grid[i - 1][j], grid[i][j - 1])；
+
+class Solution {
+public:
+    int minPathSum(vector<vector<int>>& grid) {
+	if (grid.empty())
+	{
+		return 0;
+	}
+	int m = grid.size();
+	int n = grid[0].size();
+	for (int i = 1; i < m; i++)
+	{
+		grid[i][0] += grid[i - 1][0];
+	}
+	for (int i = 1; i < n; i++)
+	{
+		grid[0][i] += grid[0][i - 1];
+	}
+	for (int i = 1; i < m; i++)
+	{
+		for (int j = 1; j < n; j++)
+		{
+			grid[i][j] += min(grid[i - 1][j], grid[i][j - 1]);
+		}
+	}
+	return grid[m-1][n-1];
+}
+};

@@ -1,0 +1,47 @@
+//may/31/2018 ac 12ms
+
+//需采用巧妙的方法避免第二次遍历链表
+//使用两个指针，相隔n个位置，这样后一个指针到达尾指针（next == NULL）的时候前指针就在倒数第n个节点的前一个位置，更改该位置的next指针即可
+//注意当n等于节点数，即要删除第一个节点的时候，还让后指针先走n个节点，会越界（向后n个位置即达到尾节点）
+//所以本题先让后指针向下走（n-1）个节点，判断后指针是否已经到达尾节点，若是，直接删除头结点即可（头指针指向next），因为此时必然是删除第一个节点
+//若未到达尾节点，则让后指针再向下走一步，再让两个指针同时向后，搜寻后指针达到为节点的时候前指针所在的节点，更改其next指针指向的位置。
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode* pi = head;
+        ListNode* cur = head;
+        
+        for(int i = 1; i < n; i++)
+        {
+            pi = pi -> next;
+        }
+        if(pi -> next == NULL)
+        {
+            head = head -> next;
+            return head;
+        }
+        else
+        {
+            pi = pi -> next;
+        }
+        while(pi -> next != NULL)
+        {
+            cur = cur -> next;
+            pi = pi -> next;
+        }
+        ListNode* temp = cur;
+        temp = temp -> next;
+        cur -> next = temp -> next;
+        
+        return head;
+    }
+};

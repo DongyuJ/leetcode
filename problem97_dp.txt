@@ -1,0 +1,63 @@
+//Aug/7/2018 ac 0ms beats 100%
+//这道题回溯很好解，但是会超时，运用dp的话就可以不用回溯到重复点再次计算后面的排列
+//dp[i][j]代表当匹配到s3的第i+j-1位的时候，s1的前i-1位和s2的前j-1位是否成功匹配
+//我们将第一行和第一列进行初始化，其中dp[0][0]代表s1，s2都为空，初始化为1（其实好像无意义），然后第一行其余代表s2的前n位与s3前n位匹配，直到不成功就跳出，
+//第一列也同理
+
+//这样动态转移方程就出来了，对于后面的所有位置
+//dp[i][j] = (dp[i-1][j] && s1[i-1] == s3[i+j-1]) || (dp[i][j-1] && s1[j-1] == s3[i+j-1]) 解题的时候把条件分开了
+//前面一半代表s3匹配到i+j-2位的时候，成功匹配了s1的i-2位和s2的j-1位，而且s3的第i+j-1位与s1的第i-1位可以匹配，所以综合起来就是匹配到s3的i+j-1位，
+//s1的前i-1位和s2的前j-1位成功匹配了
+
+class Solution {
+public:
+    bool isInterleave(string s1, string s2, string s3) {
+        vector<vector<bool>> dp(s1.size() + 1,vector<bool>(s2.size() + 1,0));
+        dp[0][0] = 1;
+        if(s1.size() + s2.size() != s3.size())
+        {
+            return 0;
+        }
+        for(int i = 0; i < s1.size(); i++)
+        {
+            if(s1[i] == s3[i])
+            {
+                dp[i+1][0] = 1;
+            }
+            else
+            {
+                break;
+            }
+        }
+        for(int i = 0; i < s2.size(); i++)
+        {
+            if(s2[i] == s3[i])
+            {
+                dp[0][i+1] = 1;
+            }
+            else
+            {
+                break;
+            }
+        }
+        
+        
+        for(int i = 1; i <= s1.size(); i++)
+        {
+            for(int j = 1; j <= s2.size(); j++)
+            {
+                if((dp[i - 1][j] && s1[i-1] == s3[i+j-1]) || (dp[i][j-1] && s2[j-1] == s3[i+j-1]))
+                {
+                    dp[i][j] = 1;
+                }
+                else
+                {
+                    dp[i][j] = 0;
+                }
+                //cout<<dp[i+1][j+1]<<" ";
+            }
+            //cout<<endl;
+        }
+        return dp[s1.size()][s2.size()];
+    }
+};

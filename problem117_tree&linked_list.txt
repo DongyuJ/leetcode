@@ -1,0 +1,53 @@
+//ac Dec/30/2018
+//a expand of problem 116, this time we don't have prefect binary
+//tree, so we change it a bit, we use a cur pointer to link the list
+//at the current level(we will start from the second level)
+//we used a dummy node pointed to the head of cur
+//we have another pointer pointed to the previous level of cur 
+//and it shift from left to right. Each time it shift, it will try to 
+//visit its left and right child. Every time we got a non-NULL child
+//add it into the last of cur list(next level)
+//Every time we finish a level, shift the two pointer a level down
+//pre pointed to the next of the dummy node and cur is init
+//to be a NULL and dummy node is equal to cur
+
+//Becareful about the ending statement, that is the cur list dont
+//have any node exclude the dummy node
+
+/**
+ * Definition for binary tree with next pointer.
+ * struct TreeLinkNode {
+ *  int val;
+ *  TreeLinkNode *left, *right, *next;
+ *  TreeLinkNode(int x) : val(x), left(NULL), right(NULL), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void connect(TreeLinkNode *root) {
+        if(!root){
+            return;
+        }
+        TreeLinkNode *dummy = new TreeLinkNode(-1);
+        dummy->next = root;
+        while(dummy != NULL){
+            TreeLinkNode *pre = dummy->next;
+            TreeLinkNode *cur = new TreeLinkNode(-1);
+            dummy = cur;
+            while(pre != NULL){
+                if(pre->left != NULL){
+                    cur->next = pre->left;
+                    cur = cur->next;
+                }
+                if(pre->right != NULL){
+                    cur->next = pre->right;
+                    cur = cur->next;
+                }
+                pre = pre->next;
+            }
+            if(dummy == cur){
+                break;
+            }
+        }
+    }
+};

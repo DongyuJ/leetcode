@@ -1,0 +1,29 @@
+// Jun/28/2018 ac 4ms beats 99.68%
+//从最后一位开始向前遍历，对指针所在位置进行++操作（因为当遍历到了当前位置意味着前面有进位）
+//如果++完之后当前位置为10，则置为0，并向前移动一位。否则直接跳出循环。 循环结束后如果指针在-1位置，证明第一位为9，且有进位
+//在数组第一位插入一个1即可。
+
+class Solution {
+public:
+    vector<int> plusOne(vector<int>& digits) {
+        int pi = digits.size() - 1;
+        while(pi >= 0)
+        {
+            digits[pi] ++;
+            if(digits[pi] == 10)
+            {
+                digits[pi] = 0;
+                pi--;
+            }
+            else
+            {
+                break;
+            }
+        }
+        if(pi == -1)
+        {
+            digits.insert(digits.begin(),1);
+        }
+        return digits;
+    }
+};

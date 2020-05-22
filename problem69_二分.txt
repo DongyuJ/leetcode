@@ -1,0 +1,29 @@
+//Jun/30/2018 ac 31ms beats 40%
+//利用一个高中的常用不等式，n的平方根小于（n/2）+ 1。这样只要在0到（n/2）+ 1的范围内利用二分法寻找就可以了
+//网上还有利用牛顿迭代法，效率似乎更高
+
+class Solution {
+public:
+    int binary(long long left, long long right, int x)
+{
+	long long mean = (left + right) / 2;
+	if (mean * mean <= x && (mean + 1) * (mean + 1) > x)
+	{
+		return mean;
+	}
+	else if (mean * mean > x)
+	{
+		return binary(left, mean - 1, x);
+	}
+	else
+	{
+		return binary(mean + 1, right, x);
+	}
+}
+
+int mySqrt(int x) {
+	int m = x / 2 + 1;  //sqrt(x) < (x/2) + 1
+	int res = binary(0, m, x);
+	return res;
+}
+};

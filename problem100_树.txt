@@ -1,0 +1,39 @@
+//Jul/6/2018 ac 0ms beats 100% 感觉这两天系统时间统计有点问题
+//运用深度优先搜索，树的处理与链表相似
+//这里特殊处理了一端先结束的情况，直接返回左右节点的&&运算
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool dfs(TreeNode* T1, TreeNode*T2)
+    {
+        if(T1 == NULL && T2 == NULL)
+        {
+            return true;
+        }
+        else if(T1 == NULL || T2 == NULL)
+        {
+            return false;
+        }
+        else if(T1->val != T2->val)
+        {
+            return false;
+        }
+        else
+        {
+            return dfs(T1->left, T2->left) && dfs(T1->right, T2->right);
+        }
+    }
+    
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        return dfs(p,q);
+    }
+};

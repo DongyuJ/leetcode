@@ -1,0 +1,51 @@
+//我们在外面加一圈0，然后对每一个位置进行扫描，如果发现
+//1，就对周围进行dfs将所有1改成2，计数器加一
+// 16ms/11.1mb 
+//参考cv课上讲过的2-pass 算法，等一下可以进行一下对比
+
+class Solution {
+public:
+    void dfs(vector<vector<char>>& grid, int x, int y){
+        if(grid[x][y] != '1'){
+            return;
+        }
+        
+        grid[x][y] = '2';
+        
+        dfs(grid, x - 1, y);
+        dfs(grid, x + 1, y);
+        dfs(grid, x, y - 1);
+        dfs(grid, x, y + 1);
+    }
+    
+    int numIslands(vector<vector<char>>& grid) {
+        if(grid.size() == 0){
+            return 0;
+        }
+        
+        vector<vector<char>> new_grid(grid.size() + 2);
+        for(int i = 0; i < new_grid.size(); i++){
+            new_grid[i].resize(grid[0].size() + 2, '0');
+        }
+        
+        
+        for(int i = 1; i < new_grid.size() - 1; i++){
+            for(int j  = 1; j < new_grid[0].size() - 1; j++){
+                new_grid[i][j] = grid[i - 1][j - 1];
+            }
+        }
+        
+        
+        int cnt = 0;
+        for(int i = 1; i < new_grid.size() - 1; i++){
+            for(int j = 1; j < new_grid[0].size() - 1; j++){
+                if(new_grid[i][j] == '1'){
+                    cnt++;
+                    dfs(new_grid, i, j);
+                }
+            }
+        }
+        
+        return cnt;
+    }
+};

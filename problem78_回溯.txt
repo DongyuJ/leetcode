@@ -1,0 +1,22 @@
+//Jul/5/2018 ac 4ms beats 100% 我怎么觉得好像是最快的一个，大概是改过题目和测试了（原来好像是要求非下降排序）
+//与上一题一样，只是上一题是当temp达到预期大小才存做一个结果，而这题则将所有情况全部保存。
+
+class Solution {
+public:
+    void backtracking(vector<int>& nums, int point, vector<vector<int>>& res, vector<int> temp)
+{
+	res.push_back(temp);
+	for (int i = point; i < nums.size(); i++)
+	{
+		temp.push_back(nums[i]);
+		backtracking(nums, i + 1, res, temp);
+		temp.pop_back();
+	}
+}
+
+vector<vector<int>> subsets(vector<int>& nums) {
+    vector<vector<int>> res;
+	backtracking(nums, 0, res, {});
+	return res;
+}
+};

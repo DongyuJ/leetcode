@@ -1,0 +1,16 @@
+//168 的逆问题。 将string的每一位都当作26进制减一后的数
+//对每一位加一再×26的对应次方进行还原
+
+class Solution {
+public:
+    int titleToNumber(string s) {
+        int cnt = s.size() - 1;
+        int result = 0;
+        
+        for(int i = 0; i <= cnt; i++){
+            result += (s[i] - 'A' + 1) * pow(26, cnt - i);
+        }
+        
+        return result;
+    }
+};

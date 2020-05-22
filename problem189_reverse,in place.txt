@@ -1,0 +1,18 @@
+//sep/19/2018 ac
+//这个思路比较有意思，是让一个数组绕着一个点旋转的in place的方法，将该点前后的子数组分别倒序，再将整个数组倒序
+
+class Solution {
+public:
+    void rotate(vector<int>& nums, int k) {
+        k = k % nums.size();
+        if(!k)
+        {
+            return ;
+        }
+        k = nums.size() - k;
+        
+        reverse(nums.begin(), nums.begin() + k);
+        reverse(nums.begin() + k, nums.end());
+        reverse(nums.begin(), nums.end());
+    }
+};

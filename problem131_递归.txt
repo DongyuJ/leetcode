@@ -1,0 +1,52 @@
+//Feb/27/2019 ac beates 27%
+//明明很简单一道题花了好久，还是递归不熟练
+//要注意所有的边界点，包括停止，for循环的长度等
+//这题其实就是分治的思想，找到一个回文部份，把它加入临时的path
+//然后后面的部份继续递归完成
+
+class Solution {
+public:
+    bool isPalindrome(string s){
+        int len = s.size();
+        for(int i = 0; i < len / 2; i++){
+            if(s[i] != s[len - i - 1]){
+                // cout<<s<<endl;
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    void helper(string s, int pos, vector<string> path, vector<vector<string>> &result){
+        if(pos == s.size()){
+            // path.push_back(s.substr(pos, 1));
+            result.push_back(path);
+            return ;
+        }
+        
+        for(int i = 1; i <= s.size() - pos; i++){
+            // cout<<s.substr(pos, i)<<endl;
+            if(isPalindrome(s.substr(pos, i))){
+                path.push_back(s.substr(pos, i));
+                //for(int i = 0; i < path.size(); i++)
+                    //cout<<path[i] <<" "<<endl;
+                helper(s, pos + i, path, result);
+                path.pop_back();
+            }
+        }
+        return ;
+    }
+    
+    vector<vector<string>> partition(string s) {
+        vector<vector<string>> result;
+        
+        if(s.size() < 1){
+            return result;
+        }
+
+        vector<string> path;
+        helper(s, 0, path, result);
+        
+        return result;
+    }
+};

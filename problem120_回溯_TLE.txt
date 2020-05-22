@@ -1,0 +1,20 @@
+//TLE
+//This is a recursive solution, it is able to solve the problem but 
+//the time complexity is O(2^n) and space complxity O(1)
+//There is a way to reduce it into O(n^2) but still with a space 
+//complexity of O(n)
+
+class Solution {
+public:
+    int minimumTotal(vector<vector<int>>& triangle, int level = 0, int p = 0) {
+        if(triangle.empty()){
+            return 0;
+        }
+        if(level >= triangle.size()){
+            return 0;
+        }
+        int sum = triangle[level][p];
+        sum += min(minimumTotal(triangle, level + 1, p), minimumTotal(triangle, level + 1, p + 1));
+        return sum;
+    }
+};

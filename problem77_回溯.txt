@@ -1,0 +1,30 @@
+//Jul/5/2018 ac 92ms beats 35%
+//回溯的时候每次传入下一个位置就可以避免重复
+
+class Solution {
+public:
+    void backtracking(int n, int k, int point, vector<vector<int>>& res, vector<int> temp)
+{
+	if (temp.size() == k)
+	{
+		res.push_back(temp);
+		return;
+	}
+	for (int i = point; i <= n; i++)
+	{
+		temp.push_back(i);
+		backtracking(n, k, i + 1, res, temp);
+		temp.pop_back();
+	}
+}
+
+vector<vector<int>> combine(int n, int k) {
+	vector<vector<int>> res;
+	if (n < k)
+	{
+		return res;
+	}
+	backtracking(n, k, 1, res, {});
+	return res;
+}
+};

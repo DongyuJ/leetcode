@@ -1,0 +1,25 @@
+//June/26/2018	ac 5ms beats 84%
+//去掉尾部空格，计算最后一个单词长度即可
+
+class Solution {
+public:
+    int lengthOfLastWord(string s) {
+        int pe = s.size() - 1;
+        while(s[pe] == ' ')
+        {
+            s.pop_back();
+            pe--;
+        }
+        if(s.empty())
+        {
+            return 0;
+        }
+        int cnt = 0;
+        while(pe>=0 && s[pe] != ' ')
+        {
+            cnt++;
+            pe--;
+        }
+        return cnt;
+    }
+};

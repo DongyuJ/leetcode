@@ -1,0 +1,39 @@
+//sep/17/2018 ac
+//用dfs遍历，顺便记录下深度，在返回的时候，对每个子节点的深度进行判断，差距不大于一的话就返回大的那一个作为上一层的深度
+//否则就返回-5（之所以选择了-5，是因为担心返回0在深度比较少的时候会有bug所以选择一个小于-2 的数字比较保险，无论深度多少都不可能与-5差一）
+//只要判断返回的是不是-5就可以判断是否符合题意了
+
+//与最快的解答思路一致
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int DFS(TreeNode* T, int layer)
+    {
+        if(T == NULL)
+        {
+            return layer;
+        }
+        int left = DFS(T->left, layer + 1);
+        int right = DFS(T->right, layer + 1);
+        
+        if(abs(left - right) < 2)
+        {
+            return max(left,right);
+        }
+        return -5;
+    }
+    
+    bool isBalanced(TreeNode* root) {
+        int res = DFS(root, 0);
+        return res != -5;
+    }
+};

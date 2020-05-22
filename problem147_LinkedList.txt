@@ -1,0 +1,50 @@
+//简单的链表插入，要注意处理链表的顺序
+//常用dummy避免头节点的转换
+//链表都是逻辑问题，处理当心一点就可以了
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* insertionSortList(ListNode* head) {
+        if(head == NULL || head->next == NULL){
+            return head;
+        }
+        ListNode* dummy = new ListNode(-1);
+        dummy->next = head;
+        ListNode* pos = head->next;
+        ListNode* pos_pre = head;
+        while(pos != NULL){
+            ListNode* head_c = dummy->next;
+            ListNode* pre = dummy;
+            int flag = 0;
+            while(head_c != pos){
+                if(head_c->val > pos->val){
+                    ListNode* pos_c = pos;
+                
+                    pos = pos->next;
+                    pos_pre->next = pos;
+                    
+                    pos_c->next = head_c;
+                    pre->next = pos_c;
+
+                    flag = 1;
+                    break;
+                }
+                head_c = head_c->next;
+                pre = pre->next;
+            }
+            if(!flag){
+                pos = pos->next;
+                pos_pre = pos_pre->next;
+            }
+        }
+        return dummy->next;
+    }
+};

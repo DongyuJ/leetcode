@@ -1,0 +1,83 @@
+//merge sort与链表的结合 的应用，时间复杂度nlog(n)空间复杂度O(1)
+//依旧是快慢指针分段，然后递归解决排序问题
+//对于每个排好序的链表，按照顺序插入即可
+
+//这里的空间复杂度不是严格按照要求，如果想达到inplace的话，
+//可以不新建node接受返回的链表，而是直接在原链表上操作
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* segment(ListNode* head){
+        ListNode* slow = head;
+        ListNode* fast = head;
+        
+        while(fast->next && fast->next->next){
+            fast = fast->next->next;
+            slow = slow->next;
+        }
+        
+        ListNode* sec_half = slow->next;
+        
+        slow->next = NULL;
+        
+        return sec_half;
+    }
+    
+    ListNode* mergeSort(ListNode* head){
+        if(head->next == NULL){
+            return head;
+        }
+        
+        ListNode* sec_head = segment(head);
+        
+        ListNode* first = mergeSort(head);
+        ListNode* second = mergeSort(sec_head);
+        ListNode* dummy = new ListNode(-1);
+        ListNode* cur = dummy;
+        
+        while(first && second){
+            if(first->val > second->val){
+                cur->next = second;
+                second = second->next;
+                cur = cur->next;
+            }
+            else{
+                cur->next = first;
+                first = first->next;
+                cur = cur->next;
+            }
+        }
+        
+        while(first){
+            cur->next = first;
+            first = first->next;
+            cur = cur->next;
+        }
+        
+        while(second){
+            cur->next = second;
+            second = second->next;
+            cur = cur->next;
+        }
+        
+        return dummy->next;
+    }
+    
+    ListNode* sortList(ListNode* head) {
+        if(!head || !head->next){
+            return head;
+        }
+        
+        ListNode* new_head = mergeSort(head);
+        
+        return new_head;
+    }
+};

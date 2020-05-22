@@ -1,0 +1,60 @@
+//Jul/18/2018 ac 4ms beats 99.3%
+//思路与39题类似，只是由于数字会重复，不好直接判断中值与左右值，当中值与左右值相等的时候，可以向左或者向右推进一位（另一个端点不变）
+//其实就是舍弃掉当前的左端点或者右端点，因为它们不是需要找的值，且无法进行判断，需要避开
+//但是复杂度就变为O（n）了。
+
+class Solution {
+public:
+    int binarySearch(int left, int right, int target, vector<int>& nums)
+    {
+	    //cout << left << " " << right << endl;
+	    int mean = (left + right) / 2;
+	    if (target == nums[mean])
+	    {
+		    return 1;
+	    }
+	    if (right < left)
+	    {
+		    return 0;
+	    }
+	    if (target > nums[mean])
+	    {
+		    if(nums[mean] == nums[left] && mean != left)
+            {
+                return binarySearch(left + 1, right, target, nums);
+            }
+            if (nums[mean] >= nums[left] || target < nums[left] || mean == left)	
+		    {
+			    return binarySearch(mean + 1, right, target, nums);
+		    }
+		    else
+		    {
+			    return binarySearch(left, mean - 1, target, nums);
+		    }
+	    }
+	    else
+	    {
+		    if(nums[mean] == nums[right])
+            {
+                return binarySearch(left, right - 1, target, nums);
+            }
+            if (nums[mean] < nums[right] || target > nums[right])
+		    {
+			    return binarySearch(left, mean - 1, target, nums);
+		    }
+		    else
+		    {
+			    return binarySearch(mean + 1, right, target, nums);
+		    }
+	    }
+    }
+
+    bool search(vector<int>& nums, int target) {
+	    if (nums.empty())
+	    {
+		    return 0;
+	    }
+	    bool res = binarySearch(0, nums.size() - 1, target, nums);
+	    return res;
+    }
+};

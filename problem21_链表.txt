@@ -1,0 +1,43 @@
+//may/31/2018 ac 13ms beats 86%
+//链表操作，主要在于链表的运用
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        ListNode* m = NULL;
+        m = new ListNode(-1);					//新建一个头结点
+        ListNode* pi = m;					//创建另一个指针避免头指针丢失
+        while(l1 != NULL && l2 != NULL)				//只需要其中一个链表结束，将另一个链表添加到后面即可
+        {
+            if(l1 -> val > l2 -> val)				//比较当前l1，l2值，将pi的指针域指向较小的一方，同时向下走一位
+            {
+                pi -> next= l2;
+                l2 = l2 -> next;
+                pi = pi -> next;
+            }
+            else
+            {
+                pi -> next= l1;
+                l1 = l1 -> next;
+                pi = pi -> next;
+            }
+        }
+        if(l1 != NULL)						//将未完的链表接在pi后面
+        {
+            pi -> next= l1;
+        }
+        if(l2 != NULL)
+        {
+            pi -> next = l2;
+        }
+        return m -> next;					//从第二位开始为所需要的链表
+    }
+};

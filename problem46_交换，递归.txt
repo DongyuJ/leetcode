@@ -1,0 +1,25 @@
+//Jun/22/2018 ac 12ms beats 99.94% 思路参考网上
+//总体思路就是先将前面的数固定，直到只有两个数的时候，它们的全排列就是一次交换，然后开始回溯，三个数相当于新加的数对后面的数每个排列进行两次交换，以此类推。
+//运用了递归，先遍历到begin达到最后一位，由于i初始化为begin所以第一次遍历不会交换任何元素
+//之后开始回溯，每次交换一位并在递归下一层返回后将顺序交换回来。
+
+class Solution {
+public:
+    void permuteRecursive(vector<int> &num, int begin, vector<vector<int> > &result) {
+	if (begin == num.size() - 1) {
+		result.push_back(num);
+		return;
+	}
+	for (int i = begin; i < num.size(); i++) {
+		swap(num[begin], num[i]);
+		permuteRecursive(num, begin + 1, result);
+		swap(num[begin], num[i]);
+	}
+}
+
+vector<vector<int> > permute(vector<int> &num) {
+	vector<vector<int> > result;
+	permuteRecursive(num, 0, result);
+	return result;
+}
+};

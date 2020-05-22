@@ -1,0 +1,43 @@
+//Jun/22/2018 ac 501ms last 5%
+//维护一个strs大小的字典map，每个map都存一个字符串的字符情况
+//然后通过map之间的比较来确定是否有与之前的字符串相同的map。有就打入结果，并在strs和字典中删除这个字符串，没有则继续
+
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+	vector<vector<string>> res;
+	vector<map<char, int>> word(strs.size());
+	for (int i = 0; i < strs.size(); i++)
+	{
+		for (int j = 0; j < strs[i].size(); j++)
+		{
+			if (word[i].count(strs[i][j]) == 0)
+			{
+				word[i][strs[i][j]] = 1;
+			}
+			else
+			{
+				word[i][strs[i][j]]++;
+			}
+		}
+	}
+	for (int i = 0; i < strs.size(); i++)
+	{
+		vector<string> temp;
+		temp.push_back(strs[i]);
+		res.push_back(temp);
+		for (int j = i + 1; j < strs.size(); j++)
+		{
+			if (word[i] == word[j])
+			{
+				//cout << i <<endl;
+				res[i].push_back(strs[j]);
+				strs.erase(strs.begin() + j);
+				word.erase(word.begin() + j);
+				j--;				//注意回到之前位置
+			}
+		}
+	}
+	return res;
+}
+};

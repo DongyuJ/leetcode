@@ -1,0 +1,48 @@
+//如果没有环，课程总是可以一个个学完的，如果有环，环内的
+//课程总是无法满足前置课程的条件所以都无法学
+
+//所以这题其实就是检测一个图是否有环的题目，利用back edge来检测
+//用一个dfs函数explore将所有点的post visit 值给记录下来
+//然后遍历所有的边，如果有从post 小指向post 大的边就证明有环
+
+class Solution {
+public:
+    // use dfs to explore the graph
+    void explore(vector<vector<int>> &edges, int node, vector<bool> &visited, vector<int> &post, int &clock){
+        //pre-visit, but we only use post-visit to check back edge, so, didn't make a recored of pre-visit
+        visited[node] = 1;
+        for(int i = 0; i < edges.size(); i++){
+            if(edges[i][0] == node && !visited[edges[i][1]]){
+                explore(edges, edges[i][1], visited, post, clock);
+            }
+        }
+        post[node] = clock;
+        clock++;
+    }
+    
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        if(prerequisites.size() == 0 || prerequisites[0].size() == 0){
+            return true;
+        }
+        vector<int> post(numCourses, -1);
+        vector<bool> visited(numCourses, 0);
+        
+        int clock = 0;
+        for(int i = 0; i < numCourses; i++){
+            if(visited[i]){
+                continue;
+            }
+            explore(prerequisites, i, visited, post, clock);
+        }
+        
+        //cout<<post[0]<<" "<<post[1];
+        
+        for(int i = 0; i < prerequisites.size(); i++){
+            int u = prerequisites[i][0], v = prerequisites[i][1];
+            if(post[u] < post[v]){
+                return false;
+            }
+        }
+        return true;
+    }
+};

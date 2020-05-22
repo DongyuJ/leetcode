@@ -1,0 +1,31 @@
+//Aug/9/2018 ac beats 2%
+//看了一下，效率高的算法是将我的返回语句拆分成了if（。。。）return false， 和 return。。。
+
+//一开始用左右子节点和根节点比较既麻烦，又容易搞错判断的对象
+//后来改为比较一个取值范围，就清晰多了，其实整个题目相当于不断缩小取值的范围，每次向左走一步，相当于把最大值移到当前节点的值，向右就是移动最小值
+//这题还有个很坑的地方，有一个测试数据就卡在int类型的最大值，导致我不得不将类型改成longlong。
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool solve(TreeNode* T, long long minium, long long maxium)
+    {
+        if(T == NULL)
+        {
+            return true;
+        }
+        return T->val < maxium && T->val >minium && (solve(T->left,minium,T->val) && solve(T->right,T->val,maxium));
+    }
+    
+    bool isValidBST(TreeNode* root) {
+        return solve(root,LONG_MIN,LONG_MAX);
+    }
+};

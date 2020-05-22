@@ -1,0 +1,21 @@
+//找第k小的元素，直接排序复杂度为O（NlogN），
+//运用优先队列（最小堆），复杂度可以降到O（NlogK）
+
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        priority_queue<int, vector<int>, greater<int>> min_heap;
+        
+        for(int i = 0; i < nums.size(); i++){
+            if(min_heap.size() < k){
+                min_heap.push(nums[i]);
+            }
+            else if(min_heap.top() < nums[i]){
+                min_heap.pop();
+                min_heap.push(nums[i]);
+            }
+        }
+        
+        return min_heap.top();
+    }
+};

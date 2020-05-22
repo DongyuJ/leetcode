@@ -1,0 +1,41 @@
+//Jun/4/2018 ac 4ms beats100%
+
+//操作链表前最好先画好图，理清逻辑，指针域的改变顺序尤其重要。
+//注意头节点不一样。没有前序节点，不需要调整，但是，后面的节点还要考虑将之前的节点都连上，不然就断链了。。
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+	ListNode* temp = head;
+	ListNode* pi = head;
+	if (head == NULL || head->next == NULL)
+	{
+		return head;
+	}
+	pi = (temp->next)->next;
+	(temp->next)->next = temp;
+	head = temp->next;
+	temp->next = pi;
+	while (temp->next != NULL)
+	{
+		if ((temp->next)->next == NULL)
+		{
+			return head;
+		}
+		pi = (pi->next)->next;
+		((temp->next)->next)->next = temp->next;
+		temp->next = (temp->next)->next;
+		((temp->next)->next)->next = pi;
+		temp = (temp->next)->next;
+	}
+	return head;
+}
+};

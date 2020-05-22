@@ -1,0 +1,49 @@
+/**
+ * Definition for singly-linked list.
+//Aug/2/2018 ac 0ms beats 100%
+//每次链表问题都连的晕乎乎的，其实就是一次循环记下断开链子的点，将后面利用三个节点把中间的链子全部反过来，最后再将记录点连上，这里注意连接顺序
+//另外在开头加上一个无意义的节点以防止头节点发生了改变而失去头结点
+
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseBetween(ListNode* head, int m, int n) {
+        if(head->next == NULL || m == n)
+        {
+            return head;
+        }
+        int cnt = 1;
+        ListNode* h = new ListNode(-1);
+        h->next = head;
+        head = h;
+        while(cnt < m)
+        {
+            cnt++;      //count the next Node
+            head = head->next;
+        }
+        ListNode* l1 = head->next;
+        ListNode* l2 = l1->next;
+        ListNode* l3 = l2->next;
+        while(cnt < n)
+        {
+            l2->next = l1;
+            l1 = l2;
+            l2 = l3;
+            if(l3 == NULL)
+            {
+                break;
+            }
+            l3 = l3->next;
+            cnt++;
+        }
+        head->next->next = l2;
+        head->next = l1;
+        
+        return h->next;
+    }
+};

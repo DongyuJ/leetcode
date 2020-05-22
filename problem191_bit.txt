@@ -1,0 +1,14 @@
+//用与运算查看每一位
+
+class Solution {
+public:
+    int hammingWeight(uint32_t n) {
+        uint32_t mask = 1;
+        int cnt = 0;
+        for(int i = 0; i < 32; i++){
+            cnt += (n >> i) & mask;
+        }
+        
+        return cnt;
+    }
+};

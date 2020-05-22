@@ -1,0 +1,72 @@
+//这题用binary search可以把复杂度降到O（（log（n））^ 2）
+
+//我们首先用logn 的时间得到深度（一直向左）
+//这样我们就有了n的区间（在最深的那一层从第一个到左后一个之间）
+
+//然后每一次使用2分，logn， 每一次查找指定节点是否存在（logn）
+//所以是logn * logn
+
+//这里的二分要注意，是向左逼近，因为最左边的一定存在，右边不一定
+//就是说，左边一定要指向是的，所以不能+1，那么就需要cell一下mid
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int countDepth(TreeNode* root){
+        int n = 0;
+        while(root){
+            n++;
+            root = root->left;
+        }
+        
+        return n;
+    }
+    
+    bool isNodeExist(TreeNode* root, int n){
+        string command = "";
+        while(n > 1){
+            int child = n / 2;
+            child * 2 == n ? command += 'L' : command += 'R';
+            n /= 2;
+        }
+        
+        for(int i = command.size() - 1; i >= 0; i--){
+            command[i] == 'L' ? root = root->left : root = root->right;
+        }
+        
+        if(root) return true;
+        
+        return false;
+    }
+    
+    int countNodes(TreeNode* root) {
+        int depth = countDepth(root);
+        if(depth == 0) return 0;
+        if(depth == 1) return 1;
+        
+        // range: [2^depth, 2^(depth + 1))
+        int left = pow(2, depth - 1), right = pow(2, depth) - 1;
+        
+        while(left < right){
+            int mid = (left + right + 1) / 2;
+            // cout<<mid<<" "<<isNodeExist(root, mid)<<endl;
+            
+            if(isNodeExist(root, mid)){
+                left = mid;
+            }
+            else{
+                right = mid - 1;
+            }
+        }
+        
+        return left;
+    }
+};

@@ -1,0 +1,33 @@
+//Jul/15/2018
+//二进制转换问题
+
+class Solution {
+public:
+    int binaryGap(int N) {
+        vector<int> s;
+        while(N > 0)
+        {
+            s.push_back(N%2);
+            N /= 2;
+        }
+        while(s[s.size() - 1] != 1)
+        {
+            s.pop_back();
+        }
+        if(s.size() < 2)
+        {
+            return 0;
+        }
+        int maxlen = 0;
+        int idx = s.size() - 1;
+        for(int i = s.size() - 2; i >= 0; i--)
+        {
+            if(s[i] == 1)
+            {
+                maxlen = max(idx - i, maxlen);
+                idx = i;
+            }
+        }
+        return maxlen;
+    }
+};

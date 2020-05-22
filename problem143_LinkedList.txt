@@ -1,0 +1,87 @@
+//这题有一点小技巧，就是用快慢指针分段，将链表的后半段反转
+//然后安顺寻将后半段插入前半段的空隙中，
+
+//注意一下链表长度为偶数的情况，此时，两段长度相同
+//所以全部插入完之后后半段仍会留下一个节点，再将其接到原链表末尾
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* cut(ListNode* head){
+        ListNode* head_h;
+        
+        ListNode* slow = head;
+        ListNode* fast = head;
+        
+        while(fast->next && fast->next->next){
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        
+        head_h = slow->next;
+        slow->next = NULL;
+        
+        return head_h;
+    }
+    
+    ListNode* reverse_list(ListNode* head){
+        if(!head->next){
+            return head;
+        }
+        
+        ListNode* pre = head;
+        ListNode* cur = head->next;
+        head->next = NULL;
+        bool reach_tail = 0;
+        
+        while(!reach_tail){
+            ListNode* post;
+            if(!cur->next){
+                reach_tail = 1;
+            }
+            else{
+                post = cur->next;
+            }
+            
+            cur->next = pre;
+            pre = cur;
+            cur = post;
+        }
+        
+        return pre;
+    }
+    
+    void reorderList(ListNode* head) {
+        if(head == NULL || head->next == NULL || head->next->next == NULL){
+            return;
+        }
+        
+        ListNode* head_h = cut(head);
+        ListNode* cur = reverse_list(head_h);
+        
+        ListNode* pre = head;
+        ListNode* post = head->next;
+        while(pre->next){
+            ListNode* cur_c = cur;
+            cur = cur->next;
+            
+            pre->next = cur_c;
+            cur_c->next = post;
+            
+            pre = post;
+            post = post->next;
+        }
+        
+        if(cur){
+            pre->next = cur;
+        }
+        
+    }
+};

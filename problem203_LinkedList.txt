@@ -1,0 +1,33 @@
+//基本的链表操作，注意用dummy来避免头指针的特殊情况
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeElements(ListNode* head, int val) {
+        ListNode* dummy = new ListNode(-1);
+        
+        dummy->next = head;
+        
+        ListNode* cur = head;
+        ListNode* pre = dummy;
+        while(cur){
+            if(cur->val == val){
+                pre->next = cur->next;
+                cur = cur->next;
+            }
+            else{
+                pre = pre->next;
+                cur = cur->next;
+            }
+        }
+        
+        return dummy->next;
+    }
+};

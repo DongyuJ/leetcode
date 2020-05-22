@@ -1,0 +1,47 @@
+//sep/15/2018 ac O(n)
+//每次找到中点作为新的根节点，这样可以保持左右平衡
+//其实可以不用设定两个数组进行切分的，只需要在递归的时候加上begin和end就可以了
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* findroot(vector<int> nums)
+    {
+        if(nums.empty())
+        {
+            return NULL;
+        }
+        
+        int mean = nums.size() / 2;
+        TreeNode *T = new TreeNode(nums[mean]);
+        vector<int> left;
+        vector<int> right;
+        for(int i = 0; i < nums.size(); i++)
+        {
+            if(i < mean)
+            {
+                left.push_back(nums[i]);
+            }
+            if(i > mean)
+            {
+                right.push_back(nums[i]);
+            }
+        }
+        T->left = findroot(left);
+        T->right = findroot(right);
+        return T;
+    }
+    
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        TreeNode* root = findroot(nums);
+        return root;
+    }
+};

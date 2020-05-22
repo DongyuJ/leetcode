@@ -1,0 +1,42 @@
+// mar/5/2019 ac last 5%
+
+//直接用暴力查找做的， 以每一个站点作为起始站都试了一遍
+
+class Solution {
+public:
+    int next_station(int cur_station, int n){
+        if(cur_station == n - 1){
+            return 0;
+        }
+        else{
+            return cur_station + 1;
+        }
+    }
+    
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        if(gas.empty()){
+            return -1;
+        }
+        for(int i = 0; i < gas.size(); i++){
+            int cur_gas = 0;
+            vector<bool> traveled(gas.size(), 0);
+            int cur_station = i;
+            while(1){
+                cur_gas += gas[cur_station];
+                if(cur_gas >= cost[cur_station]){
+                    cur_gas -= cost[cur_station];
+                    traveled[cur_station] = 1;
+                    cur_station = next_station(cur_station, gas.size());
+                    
+                    if(traveled[cur_station] == 1){
+                        return i;
+                    }
+                }
+                else{
+                    break;
+                }
+            }
+        }
+        return -1;
+    }
+};

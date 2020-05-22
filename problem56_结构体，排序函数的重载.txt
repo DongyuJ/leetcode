@@ -1,0 +1,51 @@
+//Jun/25/2018 ac 16ms beats 61%
+//将所有的区间按照start进行排序，然后先将第一个区间存入res，后面将每一个区间的start与res中最后一个区间的end作比较。
+//如果前者小于等于后者，证明这两个区间有重叠，那么就需要将合并后的区间加入res，注意，需要先将res最后一个区间存储到temp，然后将这个区间pop掉
+//而后比较两个区间的end，将比较大的那一个作为新的end，temp中的start作为新的start传入res。
+
+//注意sort的重载：sort（begin，end，cmp）
+//cmp是一个static的bool函数，如果从小到大就是小于return 1，其他情况return 0；如果还有其他次要条件的比较还可以通过加入判断条件实现。
+
+
+/**
+ * Definition for an interval.
+ * struct Interval {
+ *     int start;
+ *     int end;
+ *     Interval() : start(0), end(0) {}
+ *     Interval(int s, int e) : start(s), end(e) {}
+ * };
+ */
+class Solution {
+public:
+    
+static bool cmp(Interval a, Interval b)
+{
+	return a.start < b.start;
+}
+
+vector<Interval> merge(vector<Interval>& intervals) {
+	vector<Interval> res;
+	if(intervals.empty())
+    {
+        return res;
+    }
+    Interval temp;
+	sort(intervals.begin(), intervals.end(), cmp);
+	res.push_back(intervals[0]);
+	for (int i = 1; i < intervals.size(); i++)
+	{
+		if (res[res.size() - 1].end >= intervals[i].start)
+		{
+			temp = res[res.size() - 1];
+			res.pop_back();
+			res.push_back(Interval(temp.start, max(temp.end, intervals[i].end)));
+		}
+		else
+		{
+			res.push_back(intervals[i]);
+		}
+	}
+	return res;
+}
+};

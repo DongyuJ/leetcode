@@ -1,0 +1,39 @@
+//may/27/2018 ac 
+//先将罗马字转换为数字，若下一位数字比自己大，则减，否则加上自身代表的数字即为结果
+
+class Solution {
+public:
+        int romanToInt(string s) {
+        string symbol = "IVXLCDM";
+        int val[] = {1,5,10,50,100,500,1000};
+        int res = 0;
+        int sval[s.length()];
+        for(int i = 0;i < s.length();i++)
+        {
+            for(int j = 0;j < 7;j++)
+            {
+                if(s[i] == symbol[j])
+                {
+                    sval[i] = val[j];
+                    break;
+                }
+            }
+        }
+        for(int i = 0;i < s.length();i++)
+        {
+            if(i == s.length() - 1)
+            {
+                res = res + sval[i];
+            }
+            else if(sval[i] < sval[i + 1])
+            {
+                res = res - sval[i];
+            }
+            else
+            {
+                res = res + sval[i];
+            }
+        }
+        return res;
+    }
+};

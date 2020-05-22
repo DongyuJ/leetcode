@@ -1,0 +1,27 @@
+//Jun/20/2018 ac 6ms
+//只需要在problem 62基础上加一个判断即可，因为当obstacleGrid为1，即有障碍物的时候，只要将dp数组对应位置记为0即可（没有方法可以达到那个位置）
+
+class Solution {
+public:
+    int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
+		
+		int m = obstacleGrid.size();
+		int n = obstacleGrid[0].size();
+
+		vector<vector<int>> dp(m + 1);	//定义一个m*n数组的方法
+		for (int i = 0; i <= m; i++)
+		{
+			dp[i].resize(n + 1);
+		}
+		dp[0][1] = 1;
+		for (int i = 1; i <= m; i++)
+		{
+			for (int j = 1; j <= n; j++)
+			{
+				if (!obstacleGrid[i - 1][j - 1])
+					dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+			}
+		}
+		return dp[m][n];
+	}
+};

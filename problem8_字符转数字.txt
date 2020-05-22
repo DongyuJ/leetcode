@@ -1,0 +1,49 @@
+//may/24/2018 ac 33ms
+//注意，A.符号判断需要在所有输出之前  B.在转化的时候需要及时判断数字是否过大，不然过于庞大的数字会影响符号位。
+
+class Solution {
+public:
+    int myAtoi(string str) {
+        int k = 0;
+        int flag = 0;
+        long long res = 0;
+        while(str[k] == ' ')
+        {
+            //cout<<k<<endl;
+            k++;
+        }
+        if(str[k] == '+')
+        {
+            flag = 0;
+            k++;
+        }
+        else if(str[k] == '-')
+        {
+            flag = 1;
+            k++;
+        }
+        while(str[k] >= '0' && str[k] <= '9')
+        {
+            res = res * 10 + str[k] - '0';
+            if(abs(res) > INT_MAX)
+            {
+                break;
+            }
+            k++;
+        }
+        if(flag)
+        {
+            res = -res;
+        }
+        if(res > INT_MAX)
+        {
+            return INT_MAX;
+        }
+        else if(res < INT_MIN)
+        {
+            return INT_MIN;
+        }
+        
+            return res;
+        }
+};

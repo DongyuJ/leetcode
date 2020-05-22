@@ -1,0 +1,55 @@
+//Sep/2/2018 ac 80ms beats 2%
+//与105一样，只是从post order的最后一位找到根节点
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* Builder(vector<int> pos, vector<int> in)
+    {
+        if(pos.empty())
+        {
+            return NULL;
+        }
+        
+        int val = pos[pos.size() - 1];
+        TreeNode* T = new TreeNode(val);
+        
+        int cnt = 0;
+        
+        while(in[cnt] != val)
+        {
+            cnt++;
+        }
+        
+        vector<int> pos1,pos2,in1,in2;
+        for(int i = 0; i < cnt; i++)
+        {
+            pos1.push_back(pos[i]);
+            in1.push_back(in[i]);
+        }
+        for(int i = cnt + 1; i < pos.size(); i++)
+        {
+            pos2.push_back(pos[i - 1]);
+            in2.push_back(in[i]);
+        }
+        
+        T->left = Builder(pos1, in1);
+        T->right = Builder(pos2, in2);
+        
+        return T;
+    }
+    
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        TreeNode* root;
+        root = Builder(postorder, inorder);
+        return root;
+    }
+};

@@ -1,0 +1,18 @@
+//Jul/28/2018 ac 4ms beats 98%
+//应该不是最简单的，我是每一次找到位置插入再删除nums1中最后一位（无效位）
+
+class Solution {
+public:
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+        int idx = 0;
+        for(int i = 0; i < n; i++)
+        {
+            while(idx < m + i && nums1[idx] < nums2[i])
+            {
+                idx++;
+            }
+            nums1.insert(nums1.begin() + idx, nums2[i]);
+            nums1.pop_back();
+        }
+    }
+};

@@ -1,0 +1,100 @@
+//ac may,21,2018(66ms)
+//单向链表
+//注意数据[5],[5] -> [0,1] 若未判断结束时carry的遗留值易误输出[0]
+//注意数据[1],[99] -> [0,0,1] 当sum = 9，carry = 1时应先将digit处理为0
+//然后sum改为10，不然会误输出[0,10]。
+
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;					//数据域
+ *     ListNode *next;				//指针域
+ *     ListNode(int x) : val(x), next(NULL) {}	//添加方式，如x->next = new ListNode(8)代表添加一个数据域为8指针域为NULL的节点（向下添加）
+ * };
+ */
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* create = NULL;							//用于创建保存结果的链表
+        ListNode* result = NULL;							//用于记录结果的表头指针
+        ListNode* x1 = l1;								//避免头结点丢失，使用x1，x2代替l1，l2操作
+        ListNode* x2 = l2;
+        int digit = 0;									//记录两数之和个位数
+        int carry = 0;									//记录进位
+        int sum = 0;									//记录两数之和
+        if(l1 == NULL){									//若一个数为0，直接将另一个数作为结果
+            result = l2;
+        }
+        if(l2 == NULL){
+            result = l1;
+        }
+        else{										//先处理个位数，这样给result指针一个记录值
+            sum = x1->val + x2->val;
+            digit = sum % 10;
+            digit = digit + carry;							//处理进位，若加上进位又再进位，需处理sum，否则下一个进位出错
+            if(digit == 10)
+            {
+                digit = 0;								//同时将digit置为0，否则下一节点数据域将记录[10].
+		sum = 10;
+            }
+            create = new ListNode(digit);
+            carry = sum / 10;
+            result = create;
+                
+            if(x1->next == NULL && x2->next == NULL){					//两数同时结束，需考虑carry残留，否则会出现5+5=0.
+                if(carry == 1)
+                {
+                    create->next = new ListNode(1);					
+                }
+                return result;
+            }
+            if(x1->next == NULL){							//若一个数先结束，将剩余位置补上0
+                 x1 = new ListNode(0);
+            }
+            else{
+                x1 = x1->next;
+            }
+            if(x2->next == NULL){
+                x2 = new ListNode(0);
+            }
+            else{
+                x2 = x2->next;
+            }
+            
+            while(x1 != NULL || x2 != NULL){						//对后面全部数据处理，直到达到两个链表的尾节点
+                sum = x1->val + x2->val;
+                digit = sum % 10;
+                digit = digit + carry;
+                if(digit == 10)
+                {
+                    digit = 0;
+                    sum = 10;
+                }
+                create->next = new ListNode(digit);
+                create = create->next;
+                carry = sum / 10;
+                
+                if(x1->next == NULL && x2->next == NULL){
+                    if(carry == 1){
+                        create->next = new ListNode(1);
+                    }
+                    break;
+                }
+                if(x1->next == NULL){
+                    x1 = new ListNode(0);
+                }
+                else{
+                    x1 = x1->next;
+                }
+                if(x2->next == NULL){
+                    x2 = new ListNode(0);
+                }
+                else{
+                    x2 = x2->next;
+                }
+            }
+        }
+        return result;
+    }
+};

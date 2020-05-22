@@ -1,0 +1,39 @@
+//Jun/27/2018	ac 23ms last 10%
+//先将链表首尾相连成一个环，并计算长度，而后用去余操作计算需要右移多少位（不管要移动多少圈，只管不足一圈的部分）
+//右移的位数就是需要切开的位置，切开前记得将head重置到切开位置的下一个节点
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+	if(head == NULL || head->next == NULL)
+    {
+        return head;
+    }
+    ListNode* l = head;
+	int cnt = 1;
+	while (l->next != NULL)
+	{
+		l = l->next;
+		cnt++;
+	}
+	int back = k % cnt;
+	l->next = head;
+	for (int i = 0; i < cnt - back; i++)
+	{
+		l = l->next;
+	}
+	head = l->next;
+	l->next = NULL;
+
+	return head;
+}
+
+};

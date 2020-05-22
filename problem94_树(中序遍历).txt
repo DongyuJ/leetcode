@@ -1,0 +1,35 @@
+//Jul/7/2018 ac 0ms beats 100%
+//按照中序遍历说明进行即可
+//1.将左节点传入递归
+//2.将根节点写入
+//3.将右节点传入递归
+
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void dfs(TreeNode* T, vector<int>& res)
+    {
+        if(T == NULL)
+        {
+            return;
+        }
+        dfs(T->left, res);
+        res.push_back(T->val);
+        dfs(T->right, res);
+    }
+    
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> res;
+        dfs(root,res);
+        return res;
+    }
+};

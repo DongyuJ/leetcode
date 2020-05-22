@@ -1,0 +1,39 @@
+//双指针记得小心越界和超出int的情况
+
+//要注意如果有运算，两个给定的int是可以越界的
+
+class Solution {
+public:
+    vector<string> summaryRanges(vector<int>& nums) {
+        int start = 0, end = 1;
+        vector<string> result;
+        
+        if(nums.size() == 0){
+            return result;
+        }
+        if(nums.size() == 1){
+            result.push_back(to_string(nums[0]));
+            return result;
+        }
+
+        while(start < nums.size()){
+            while((long long)nums[end] - nums[start] == end - start){
+                end++;
+                if(end >= nums.size()){
+                    break;
+                }
+            }
+            if(start == end - 1){
+                result.push_back(to_string(nums[start]));
+            }
+            else{
+                result.push_back(to_string(nums[start]) + "->" + to_string(nums[end - 1]));
+            }
+            
+            start = end;
+            
+        }
+        
+        return result;
+    }
+};

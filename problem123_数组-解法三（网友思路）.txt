@@ -1,0 +1,50 @@
+//ac beats 57% Jan/9/2019
+
+//This code is extreamly concise but a little hard to understand
+//It is trying to figure out the highest profit after every step:
+//buy 1, sell 1, buy 2, sell 2.
+
+//We already know in problem 120, keep finding the lowest price
+//and compute the profit of buying in the lowest and sell in current
+//price could finally give us the best profit.
+
+//Change it a bit, we can use -prices to represent a buying and find
+//the lowest price can be interprete as max(-price), which is actually 
+//regard buy as a minus profit and keep finding the highest profit 
+//for each step
+
+//So, in this solution, s1 is always the best profit till current price.
+//And b2 then is finding the highest profit regarding to s1. That is,
+//when s1 changed the profit is keep changing, and then find the 
+//highest profit after sell 2.
+
+//Think about prices =  [1, 5, 3, 2,  6, 8]
+//best choice: buy on 0, sell on 1, buy on 3, sell on 5
+
+//when i = 1, s1 = 4(best of sell 1), b2 = -1
+//when i = 2, s1 = 4, b2 = 1(change on buy 2)
+//when i = 3, s1 = 4, b2 = 2
+//when i = 4, s1 = 5(sell 1 changed), b2 = 2(buy 2 remain highest on sell1 at time 1 and buy 2 at 3)
+//when i = 5, s1 = 7, b2 = 2, s2 = 10 is the answer
+
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        if(prices.size() < 2){
+            return 0;
+        }
+        int b1 = INT_MIN;
+        int s1 = 0;
+        int b2 = INT_MIN;
+        int s2 = 0;
+        
+        for(int i = 0; i < prices.size(); i++){
+            b1 = max(b1, -prices[i]);
+            s1 = max(s1, prices[i] + b1);
+            b2 = max(b2, s1 - prices[i]);
+            s2 = max(s2, prices[i] + b2);
+        }
+        
+        return s2;
+    }
+};

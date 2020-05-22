@@ -1,0 +1,31 @@
+struct dailyTem{
+    int day;
+    int tem;
+    
+    dailyTem(int d, int t): day(d), tem(t){}
+    
+    bool operator<(const dailyTem& t) const
+    {
+        return tem > t.tem;
+    }
+};
+
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& T) {
+        priority_queue<dailyTem> undifineDay;
+        vector<int> ret(T.size(), 0);
+        
+        for(int i = 0; i < T.size(); i++){
+            while(!undifineDay.empty() && undifineDay.top().tem < T[i]){
+                int day = undifineDay.top().day;
+                undifineDay.pop();
+                ret[day] = i - day;
+            }
+            dailyTem newDay = dailyTem(i, T[i]);
+            undifineDay.push(newDay);
+        }
+        
+        return ret;
+    }
+};

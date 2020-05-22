@@ -1,0 +1,29 @@
+//Jun/22/2018 AC 299ms
+//想起来如果将字符串排序后直接比较字符串可能会节省空间，试了一下，效率略有提升
+
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+	vector<vector<string>> res;
+	vector<string> copy = strs;
+	for (int i = 0; i < strs.size(); i++)
+	{
+		sort(copy[i].begin(), copy[i].end());
+	}
+	for (int i = 0; i < copy.size(); i++)
+	{
+		res.push_back({ strs[i] });
+		for (int j = i + 1; j < copy.size(); j++)
+		{
+			if (copy[i] == copy[j])
+			{
+				res[i].push_back(strs[j]);
+				strs.erase(strs.begin() + j);
+				copy.erase(copy.begin() + j);
+				j--;
+			}
+		}
+	}
+	return res;
+}
+};

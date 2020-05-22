@@ -1,0 +1,61 @@
+//may/24/2018 ac 38ms(top 50%)
+//通过计算每一行的下角标排列规律，直接写入结果字符串
+//第一行与最后一行单独处理
+//注意numRows = 1 的时候，因为间距l为0，所以会死循环，单独处理；
+
+class Solution {
+public:
+    string convert(string s, int numRows) {
+    int l = (numRows - 1) * 2;
+    int len = s.length();
+    string res;
+    if(numRows == 1)
+    {
+        res = s;
+    }
+    else
+    {
+        for(int i = 0; i < numRows; i++)
+        {
+            int k;
+            if(i == 0)
+            {
+                k = 0;
+                while(k * l < len)
+                {
+                    res += s[k * l];
+                    k++;
+                    //cout<<res<<endl;
+                }
+            }
+            else if(i == numRows -1)
+            {
+                k = 0;
+                while((numRows - 1) + (k * l) < len)
+                {
+                    res += s[(numRows - 1) + (k * l)];
+                    k++;
+                    //cout<<res<<endl;
+                }
+            }
+            else
+            {
+                k = 0;
+                while((k * l) + i < len)
+                {
+                    res += s[i + (k * l)];
+                    //cout<<s[i + (k * l)];
+                    k++;
+                    //cout<<res<<endl;
+                    if((k * l) - i >= len)
+                    {
+                        break;
+                    }
+                    res += s[(k * l) - i];
+                }
+            }
+        }
+    }
+    return res;
+    }
+};

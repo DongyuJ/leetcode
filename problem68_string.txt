@@ -1,0 +1,56 @@
+//Jun/30/2018 ac 2ms beats 100%
+//按照题目规则一行一行的扫，先用两个标记来记录一行的首尾，然后用一个for循环将单词按照两边对齐的规则放入，如果单行只有一个单词或者是最后一行
+//则在最后面插入足量空格，否则向中间插入，用loop记录循环插入的次数以保证跳过相应量的空格，不在一个间隔出重复插入
+
+class Solution {
+public:
+    vector<string> fullJustify(vector<string>& words, int maxWidth) {
+	int start = 0, end = 0; //mark a row
+	vector<string> res;
+	while (start < words.size())
+	{
+		int cnt = 0;
+		while (end != words.size() && cnt + words[end].size() + end - start <= maxWidth)
+		{
+			cnt += words[end].size();
+			end++;
+		}
+		end--;
+		res.push_back(words[start]);
+		for (int i = start + 1; i <= end; i++)
+		{
+			res[res.size() - 1] += " ";
+			res[res.size() - 1] += words[i];
+		}
+		if (end == words.size() - 1|| start == end)	//last line
+		{
+			while (res[res.size() - 1].size() < maxWidth)
+			{
+				res[res.size() - 1] += " ";
+			}
+		}
+		else
+		{
+			int loop = 0;
+			for (int i = 0; res[res.size() - 1].size() < maxWidth; i++)
+			{
+				if (i == res[res.size() - 1].size())
+				{
+					i = 0;
+					loop++;		//用于记录需要跳过多少个空格
+
+				}
+				if (res[res.size() - 1][i] == ' ')
+				{
+					res[res.size() - 1].insert(res[res.size() - 1].begin() + i, ' ');
+					i = i + loop + 1;
+				}
+			}
+
+		}
+		start = end + 1;
+		end++;
+	}
+	return res;
+}
+};

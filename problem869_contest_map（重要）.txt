@@ -1,0 +1,37 @@
+//Jul/15/2018
+//其实是一道很简单的题目，但是容易被题目给误导了，题目要求全排列，而且首位不能为0，那么其实建立两个map就可以了
+//一个保存2的乘方数的数字情况，一个保存N的情况，只要相等就意味着N的某一种排列是2的乘方数。
+
+class Solution {
+public:
+    
+    bool reorderedPowerOf2(int N) {
+        vector<int> power = {1};
+        int idx = 0;
+        while(power[idx] < 500000000)
+        {
+            power.push_back(power[idx] * 2);
+            idx++;
+        }
+        map<int,int> digit;
+        while(N != 0)
+        {
+            digit[N % 10]++;
+            N /= 10;
+        }
+        for(int i = 0; i < power.size(); i++)
+        {
+            map<int,int> temp;
+            while(power[i] != 0)
+            {
+                temp[power[i] % 10]++;
+                power[i] /= 10;
+            }
+            if(temp == digit)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+};

@@ -1,0 +1,23 @@
+//Jun/5/2018 ac 29ms beats,89%
+//用cnt计数，从第二个数开始，若果扫到sums[i]与sums[cnt]不同，就将suns[i]计入cnt++的位置。
+//注意计数的顺序和从第二个数开始
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        if(nums.empty())
+        {
+            return 0;
+        }
+        int cnt = 0;
+        for(int i = 1; i < nums.size(); i++)
+        {
+            if(nums[i] != nums[cnt])
+            {
+                cnt++;
+                nums[cnt] = nums[i];
+            }
+        }
+        return cnt+1;
+    }
+};

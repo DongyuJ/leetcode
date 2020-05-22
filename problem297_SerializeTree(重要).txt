@@ -1,0 +1,126 @@
+//Facebook 面试题
+//要求将树储存为数组再将string转换成树
+
+//这里借鉴了leetcode上的储存方式，运用bfs，储存时按bfs顺序记录
+//到string中，用‘，’隔开
+
+//反过来的时候比较复杂，首先需要一个函数提取下一个字符串
+//这里要注意，需要实时改变起止位置，有三种情况
+//1.已经走到data末尾，返回None
+//2.string是 NULL
+//3.string是一个数字的str
+
+//同样用bfs进行处理，先取得data中的第一个string，创建
+//一个root，val就是取得的string，这里如果root是NULL，data是空
+//将root加入队列，然后每次取出队首，处理下两个string，分别是这个
+//节点的左右子节点，如果不是null再将子节点也加入队列
+
+//注意istringstream的用法
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Codec {
+public:
+    string get_next_node(string data, int &s, int &e){
+        string res = "None";
+
+        for(int i = s; i < data.size(); i++){
+            if(data[i] == ','){
+                e = i;
+                res = data.substr(s, e - s);
+                s = e + 1;
+                break;
+            }
+        }
+        
+        return res;
+    }
+    
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        string serial = "";
+        
+        if(!root){
+            //cout<<serial<<endl;
+            return serial;
+        }
+        queue<TreeNode*> bfs;
+        bfs.push(root);
+        while(!bfs.empty()){
+            TreeNode* t = bfs.front();
+            bfs.pop();
+            
+            if(!t){
+                serial += ",NULL";
+                continue;
+            }
+            
+            serial += ",";
+            serial += to_string(t->val);
+            
+            bfs.push(t->left);
+            bfs.push(t->right);
+        }
+        
+        //cout<<serial<<endl;
+        
+        return serial;
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        if(data.size() == 0){
+            TreeNode* root = NULL;
+            return root;
+        }
+        
+        int s = 1, e = 1;
+        
+        int val;
+        istringstream cur(get_next_node(data, s, e));
+        cur>>val;
+        
+        TreeNode* root = new TreeNode(val);
+        
+        queue<TreeNode*> q;
+        q.push(root);
+        
+        while(!q.empty()){
+            TreeNode* t = q.front();
+            q.pop();
+            
+            // Left child
+            string cur = get_next_node(data, s, e);
+            if(cur == "None") break;
+            if(cur != "NULL"){
+                istringstream ss(cur);
+                ss >> val;
+                t->left = new TreeNode(val);
+                q.push(t->left);
+            }
+            
+            // Right child
+            cur = get_next_node(data, s, e);
+            if(cur == "None") break;
+            if(cur != "NULL"){
+                istringstream ss(cur);
+                ss >> val;
+                t->right = new TreeNode(val);
+                q.push(t->right);
+            }
+        }
+        
+        return root;
+    }
+};
+
+// Your Codec object will be instantiated and called as such:
+// Codec codec;
+// codec.deserialize(codec.serialize(root));

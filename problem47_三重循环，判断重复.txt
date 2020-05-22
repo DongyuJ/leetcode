@@ -1,0 +1,46 @@
+//Jun/22/2018 ac 65ms last 10%
+//在三重循环的基础上加了个判断，如果当前记录与之前的某一个重复，就不加入结果集
+
+class Solution {
+public:
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+		vector<vector<int>> res;
+		if (nums.empty())
+		{
+			return res;
+		}
+		sort(nums.begin(),nums.end());
+		vector<int> temp;
+		vector<vector<int>> recall;
+		res.push_back({ nums[0] });
+		for (int k = 1; k < nums.size(); k++)			//每一次都需要清空结果，以输入增加了一个数字后的结果，用recall来记忆
+		{
+			recall = res;
+			res.clear();
+			for (int i = 0; i <= recall[0].size(); i++)	//注意由于头尾都可以添加，所以每一行需要重复n+1次
+			{
+				for (int j = 0; j < recall.size(); j++)	//对每一行的第i个位置添加
+				{
+					temp = recall[j];
+					if (i >= temp.size())		//防止越界
+					{
+						temp.push_back(nums[k]);
+					}
+					else
+					{
+						temp.insert(temp.begin() + i, nums[k]);
+					}
+					res.push_back(temp);
+                    for(int m = 0; m < res.size() - 1; m++)
+                    {
+                        if(temp == res[m])
+                        {
+                            res.pop_back();
+                        }
+                    }
+				}
+			}
+		}
+		return res;
+	}
+};

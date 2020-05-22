@@ -1,0 +1,58 @@
+//Jul/4/2018 ac 30ms beats 30%
+//用一个map记录字符和需要出现的次数，然后对s进行扫描，这里注意，即使又字符次数变为了-1，也在遇到的时候递减，因为后续移动窗口时需要排除重复的字符
+//当计数器为0，证明这是一段符合题意的子串，比较与之前最小值的大小，小就更新res（minum初始化一定要是s.size() + 1,不然遇到正好s为解的情况无法更新res）
+//然后需要将起始指针更新到下一个t中的字符，且需要跳过出现次数多余所需要的次数的t中的字符。
+//比如说s:[a,a,a,a,b],t:[a,b],第一次找到的解就是s，我们再更新，可以直接跳过这些多余的a，做法就是利用之前记录的map，
+//循环查找下一位是否在map中，如果在就自增1，再看这一位字符在map中计数是否大于0，如果大于0，证明这是第一位不重复的字符，将左端点更新到下一位在map中的字符
+//这里要注意，pi移位，T[s[pi]]++,以及忽略不在T中字符的顺序。
+
+class Solution {
+public:
+    string minWindow(string s, string t) {
+	map<char, int> T;
+	if (t.empty() || s.empty() || s.size() < t.size())
+	{
+		return "";
+	}
+	for (int i = 0; i < t.size(); i++)
+	{
+		T[t[i]] ++;
+	}
+	int cnt = t.size();
+	int pi = 0;
+	int minum = s.size() + 1;
+	string res;
+	while (!T.count(s[pi]))
+	{
+		pi++;
+	}
+	for (int i = pi; i < s.size(); i++)
+	{
+		if (T.count(s[i]))
+		{
+			T[s[i]]--;
+			if(T[s[i]] >= 0)
+				cnt--;
+		}
+		while (cnt == 0)			//注意里面的更新顺序，很重要
+		{
+			if (minum > i - pi + 1)
+			{
+				minum = i - pi + 1;
+				res = s.substr(pi, minum);
+			}
+			T[s[pi]]++;
+			if (T[s[pi]] > 0)
+			{
+				cnt++;
+			}
+			pi++;
+			while (pi < s.size() && !T.count(s[pi]))
+			{
+				pi++;
+			}
+		}
+	}
+	return res;
+}
+};

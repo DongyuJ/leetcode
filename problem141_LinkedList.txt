@@ -1,0 +1,36 @@
+//Mar/19/2019 wa 题目有误，缺少传入参数
+//注意判断链表是否有环，环的起点在哪儿的问题
+//快慢指针相遇，有环， 相遇后，慢指针和新的指针（从头出发）
+//同时出发，相遇即为环的起点
+//参考：https://blog.csdn.net/puss0/article/details/78462375
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        ListNode *fast = head;
+        ListNode *slow = head;
+        while(fast != slow && fast->next != NULL && fast != NULL){
+            fast = fast->next->next;
+            slow = slow->next;
+        }
+        if(fast == NULL || fast->next == NULL){
+            return 0;
+        }
+        int pos_real;
+        ListNode *tail = head;
+        while(tail != slow){
+            tail = tail->next;
+            slow = slow->next;
+            pos_real++;
+        }
+        return pos == pos_real;
+    }
+};

@@ -1,0 +1,76 @@
+//Jun/14/2018 ac 16ms
+//利用带返回值的回溯，可以在找到结果后直接返回
+
+class Solution {
+public:
+    bool IsValid(vector<vector<char>>& board, int point)
+{
+	int row = point / 9;
+	int column = point % 9;
+	int area_r = (row / 3) * 3;		//用于标记该坐标属于哪一个区域（分为3*3九个区域），最后*3能找到该区域的左上角的位置
+	int area_c = (column / 3) * 3;
+	for (int i = 0; i < 9; i++)
+	{
+		if (i != column && board[row][column] == board[row][i])
+		{
+			return false;
+		}
+		if (i != row && board[row][column] == board[i][column])
+		{
+			return false;
+		}
+		if (board[row][column] == board[area_r + (i / 3)][area_c + (i % 3)])
+		{
+			if (row != area_r + (i / 3) || column != area_c + (i % 3))
+				return false;
+		}
+	}
+	return true;
+}
+
+
+
+bool backtracking(vector<vector<char>>& board, int point)
+{
+	int row = point / 9;
+	int column = point % 9;
+	if (point == 81)
+	{
+		return true;
+	}
+	if (board[row][column] == '.')
+	{
+		for (int i = 1; i <= 9; i++)
+		{
+			board[row][column] = '0' + i;
+			if (IsValid(board, point))
+			{
+				if (backtracking(board, point + 1))	//只有当下一个位置满足条件该位置才会返回真
+				{
+					return true;
+				}
+			}
+			board[row][column] = '.';			//没有匹配成功，将刚才的赋值取消
+		}
+	}
+	else
+	{
+		if (backtracking(board, point + 1))			//不需要赋值，直接进入下一次的判断
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	return false;							//一定不要忘了这里的返回，这里代表对某一个位置已经循环结束9个数，还是没有满足条件的
+}
+
+
+
+void solveSudoku(vector<vector<char>>& board) {
+	int point = 0;
+	backtracking(board, point);
+}
+};

@@ -1,0 +1,26 @@
+//关键在于计算重合区域的面积。
+//重合面积的水平距离是由两个矩形中较小的右边界和较大的左边界
+//相减得到
+
+//垂直距离是由较小的上边界和较大的下边界相减得到
+
+//最后注意，如果有任意一个距离是负数，那么证明没有相交
+
+//最后只要把面积和减去相交面积就是最后答案了
+
+class Solution {
+public:
+    int computeArea(int A, int B, int C, int D, int E, int F, int G, int H) {
+        long long area_sum = (long long)(C - A) * (D - B) + (long long)(G - E) * (H - F);
+        
+        // compute overlaping length and height
+        long long l = (long long) -max(A, E) + min(C, G);
+        long long h = (long long) -max(B, F) + min(D, H);
+        
+        if(l < 0 || h < 0){
+            return area_sum;
+        }
+        
+        return area_sum - h * l;
+    }
+};

@@ -1,0 +1,52 @@
+//Jun/1/2018 ac 8ms beats 82%
+//二分查找即通过比较中值与目标的大小不断更换左右限，实现用最少的步奏找到目标
+//本题由于目标值不一定存在，所以要注意几种情况
+//1.输入单个数值，特殊处理，比较目标与这个值的大小，若小于等于目标则返回目标的标记值，若大于目标则返回target - 1；(如不特殊处理会造成nums的越界访问)
+//2.找不到target，且这个数值在范围[nums[0],nums[nums.size()-1]]范围内，这时候，只需要在查找到right-left == 1的时候（即确定在两数之间）返回right即可
+//3.target比nums[0]还小或者比nums[max]还大，分别需要返回0和max+1，即nums.size()
+class Solution {
+public:
+    int binarySearch(int left,int right,int target,vector<int>& nums)
+    {
+        int mean = (left + right) / 2;
+        if(target == nums[mean])
+        {
+            return mean;
+        }
+        else if(right - left == 1)
+        {
+            if(nums[right] < target)
+            {return right+1;}
+            
+            if(nums[left] > target)
+            {return left;}
+            
+            return right;
+        }
+        else if(nums[mean] > target)
+        {
+            return binarySearch(left,mean,target,nums);
+        }
+        else
+        {
+            return binarySearch(mean,right,target,nums);
+        }
+    }
+    
+    int searchInsert(vector<int>& nums, int target) {
+        int res;
+        if(nums.size() == 1)
+        {
+            if(nums[0] >= target)
+            {
+                return 0;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+        res = binarySearch(0,nums.size()-1,target,nums);
+        return res;
+    }
+};

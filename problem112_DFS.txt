@@ -1,0 +1,40 @@
+//sep/19/2018 ac
+//进行DFS找到所有的叶子，注意，叶子的定义是没有左右子节点，而不是到T为NULL的时候停止，已经错了好几次了
+//然后，有正有负，一定要搜索完所有节点才能确定
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool addnum(TreeNode* T, int sum, int target)
+    {
+        if(T == NULL)
+        {
+            return 0;
+        }
+        sum += T->val;
+        if(T->left == NULL && T->right == NULL)
+        {
+            return sum == target;
+        }
+        else
+        {
+            return addnum(T->left, sum, target) || addnum(T->right, sum, target);
+        }
+    }
+    
+    bool hasPathSum(TreeNode* root, int sum) {
+        if(!root)
+        {
+            return false;
+        }
+        return addnum(root, 0, sum);
+    }
+};

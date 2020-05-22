@@ -1,0 +1,38 @@
+//Jun/14/2018 ac 23ms
+//与之前的数字组合相似，注意几个处理方式，
+//1.temp每次更新后带入回溯函数，所以在结束后（即回溯回来之后）需要将temp中的值也回溯，即删除之前写入内容
+//2.加入了一个cnt参数，为的是让遍历能顺利向后进行，由于题目中说明给出的候选数字是不重复的且答案也不能重复
+//加入cnt参数限制后，每一次的循环只向后层进行。
+
+class Solution {
+public:
+    void backtracking(vector<int>& candidates, vector<vector<int>> &res, int target, int sum, vector<int> temp, int cnt)
+{
+	if (sum == target)
+	{
+		res.push_back(temp);								//记录答案
+		return;
+	}
+	else if (sum > target)
+	{
+		return;
+	}
+	else
+	{
+		for (int i = cnt; i < candidates.size(); i++)					//通过i=cnt避免遍历向上一层进行
+		{
+			temp.push_back(candidates[i]);
+			backtracking(candidates, res, target, sum + candidates[i], temp, i);
+			temp.pop_back();						//回溯temp，由于sum直接在带入的时候改变，回溯自然回到上一层状态
+		}
+	}
+
+}
+
+vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+	vector<vector<int>> res;
+	vector<int> temp;
+	backtracking(candidates, res, target, 0, temp, 0);
+	return res;
+}
+};

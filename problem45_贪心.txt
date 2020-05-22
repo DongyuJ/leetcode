@@ -1,0 +1,36 @@
+//Jun/20/2018 ac 13ms beats 99%
+//记录下当前能跳到的最远位置，然后向下遍历，记录在到这个位置之前能跳的最远位置，作为下一次跳跃，保持每一步都跳得最远
+
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+	int res = 1;
+	if (nums.size() < 2)
+	{
+		return 0;
+	}
+	int pi = 0;
+	int p_end = nums[0];
+	int max_jump = 0;
+	for (int i = 0; p_end < nums.size() - 1; i++)
+	{
+		//cout << i << endl;
+		if (i <= p_end)
+		{
+			if (nums[i] + i > max_jump + pi)
+			{
+				max_jump = nums[i];
+				pi = i;
+			}
+		}
+		else
+		{
+			i = pi;
+			p_end = pi + max_jump;
+			max_jump = 0;
+			res++;
+		}
+	}
+	return res;
+}
+};

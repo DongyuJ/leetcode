@@ -1,0 +1,46 @@
+//Jun/6/2018 ac 31ms
+//需注意边界和效率问题
+//一开始使用不停的减去减数的方式，超时了
+//新的方法参考网上，通过移位操作，达到乘2的效果，并提高效率（将除数不断乘2，直到下一次乘2超过被除数为止），而后用被除数减去这个数，并记录这是多少个除数
+//而后重复该过程直到除数大于或等于被除数，如果等于，结果需要加1（此时可以考虑越界问题）
+//应该将除数为1或-1单独提取考虑，这样可以提高效率，这个代码并没有这么做。
+
+class Solution {  
+public:  
+    int divide(int dividend, int divisor) {
+	int count = 0, result = 0;
+	bool isNeg = false;
+	if ((dividend<0 && divisor>0) || (dividend>0 && divisor<0))
+		isNeg = true;
+	unsigned int tDividend = abs(dividend);
+	unsigned int tDivisor = abs(divisor);
+	unsigned int sum = 0;
+
+
+	while (tDivisor < tDividend)
+	{
+		count = 1;
+		sum = tDivisor;
+		while ((sum <<= 1) < tDividend)
+		{
+			count <<= 1;
+		}
+		tDividend -= (sum >>= 1);
+		result += count;
+	}
+	if (result == INT_MAX && tDividend == tDivisor)
+	{
+		if(isNeg)
+		{
+			return INT_MIN;
+		}
+		else
+		{
+			return INT_MAX;
+		}
+	}
+	if (tDivisor == tDividend)
+		result++;
+	return isNeg ? (0 - result) : result;
+    } 
+};

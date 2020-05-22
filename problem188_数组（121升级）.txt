@@ -1,0 +1,30 @@
+//This solution used strategy of problem 121 and we do the 
+//buy and sell strategy for min(k, prices.size() / 2) time
+
+//Why is min(k, prices.size() / 2):
+//suppose L = prices.size(), when there are two elements in prices
+//whatever k is, only one transaction could find the highest profit
+
+//This is not the best solution, but I didn't find a better one
+
+class Solution {
+public:
+    int maxProfit(int k, vector<int>& prices) {
+        if(prices.size() < 2){
+            return 0;
+        }
+        int l = prices.size();
+        k = min(k, l / 2);
+        
+        vector<int> buy(k + 1, INT_MIN);
+        vector<int> sell(k + 1, 0);
+        
+        for(int i = 0; i < prices.size(); i++){
+            for(int j = 1; j <= k; j++){
+                buy[j] = max(buy[j], sell[j - 1] - prices[i]);
+                sell[j] = max(sell[j], buy[j] + prices[i]);
+            }
+        }
+        return sell[k];
+    }
+};

@@ -1,0 +1,31 @@
+//ac Jan/3/2019 
+//Brute force algo can be very easy, check every possible pair and 
+//choose the max one O(n^2)
+
+//This solution is mentain a varible minimum and we start from
+//the beginning, every time we find a value less than minimum
+//it means for the rest of the value, buy in this new min value
+//can bring more profit so we update minimum
+//And we also mentain a variable res which represent the best profit
+//every time we search a new value, use this value substrate the
+//minimum and if it is larger than previous res, update it
+
+//notice that, res should be init to 0 in order to prevent negative
+//profit and minimum init to be the first value, than start from the 
+//second.
+
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        if(prices.empty()){
+            return 0;
+        }
+        int minimum = prices[0];
+        int res = 0;
+        for(int i = 1; i < prices.size(); i++){
+            minimum = min(minimum, prices[i]);
+            res = max(res, prices[i] - minimum);
+        }
+        return res;
+    }
+};

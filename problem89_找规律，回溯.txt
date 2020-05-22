@@ -1,0 +1,35 @@
+//Jul/28/2018 ac 0ms beats 100%
+//首先，这道题是很明显的回溯，因为到n等于1的时候结果是[0,1],当n等于2的时候，只需要在这个结果后面加上0，1，并在后半段将顺序逆转就可以了
+//变成[00,10,11，01] -》 [0,2,3,1], 再到n=3的时候 [000,100,110,010,011,111,101,001]。我们发现，对于前半段，在后面加了个0相当于向左移位运算
+//所以对原来的数乘以2即可，后半段就是将前半段逆序后把最后一位加1，相当于十进制的加1，所以有了这个规律就可以直接写出十进制的数了
+
+class Solution {
+public:
+    
+    vector<int> grayCode(int n) {
+        vector<int> res;
+        if(n == 0)
+        {
+            res.push_back(0);
+            return res;
+        }
+        if(n == 1)
+        {
+            res.push_back(0);
+            res.push_back(1);
+            return res;
+        }
+        res = grayCode(n - 1);
+        
+        int l = res.size();
+        for(int i = 0; i < l; i++)
+        {
+            res[i] *= 2;    //first half
+        }
+        for(int i = l - 1; i >= 0; i--)
+        {
+            res.push_back(res[i] + 1);
+        }
+        return res;
+    }
+};

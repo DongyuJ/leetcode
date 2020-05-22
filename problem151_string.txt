@@ -1,0 +1,56 @@
+//题目很简单，分为两个部分
+
+//1.按照空格分词，注意前后和中间多余空格的处理
+//   这里在末尾加一个空格，这样最后一个词也可以按照空格取出
+
+//2.写入新的string，这里注意最后不要多空格就可以了
+//   这里在return前截取从第一位到倒数第二位，避免多空格
+
+class Solution {
+public:
+    vector<string> splitString(string s){
+        int start = 0;
+        int end = s.size() - 1;
+        vector<string> stringList;
+        
+        while(s[start] == ' '){
+            start++;
+            if(start >= s.size()){
+                return stringList;
+            }
+        }
+        while(s[end] == ' '){
+            end--;
+        }
+        s += " ";
+        
+        int point_s = start;
+        for(int i = start; i <= end + 1; i++){
+            if(s[i] == ' '){
+                stringList.push_back(s.substr(point_s, i - point_s));
+            }
+            while(i <= end && s[i] == ' '){
+                i++;
+                point_s = i;
+            }
+        }
+        return stringList;
+    }
+    
+    string reverseWords(string s) {
+        if(s.size() == 0){
+            return s;
+        }
+        
+        vector<string> words = splitString(s);
+        
+        string result;
+        for(int i = words.size() - 1; i > -1; i--){
+            result += words[i];
+            result += ' ';
+        }
+        result = result.substr(0, result.size() - 1);
+        
+        return result;
+    }
+};

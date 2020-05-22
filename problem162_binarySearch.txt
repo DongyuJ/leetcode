@@ -1,0 +1,45 @@
+//看到提示效率才想到二分查找，其实看到是单调性问题的时候就应该
+//往这方面考虑了
+
+//我们思考增减性，或者说导数，开头必定递增，结尾必定递减
+//否则，开头和结尾就是我们要找的答案
+
+//那么我们寻找mid的增减性
+//1.mid为peak，直接返回
+//2.mid为递增那么在mid和right中间必有导数为0的地方，搜索后半段
+//3.反之搜索前半段
+
+class Solution {
+public:
+    int findPeakElement(vector<int>& nums) {
+        if(nums.size() == 1){
+            return 0;
+        }
+        
+        int n = nums.size();
+        if(nums[1] < nums[0]){
+            return 0;
+        }
+        
+        if(nums[n-2] < nums[n-1]){
+            return n-1;
+        }
+        
+        int left = 1;
+        int right = n-2;
+        while(left < right){
+            int mid = (left + right) / 2;
+            if(nums[mid] > nums[mid - 1] && nums[mid] > nums[mid + 1]){
+                return mid;
+            }
+            
+            if(nums[mid] > nums[mid - 1] && nums[mid + 1] > nums[mid]){
+                left = mid + 1;
+            }
+            else{
+                right = mid - 1;
+            }
+        }
+        return left;
+    }
+};

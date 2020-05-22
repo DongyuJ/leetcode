@@ -1,0 +1,58 @@
+//Jun/11/2018 ac 9ms beats 89%
+//二分查找的变形，需要而外判断一下中间值和左右值的关系，以及目标和左右值的关系，但是注意中间值就是左右值的情况
+//O（logn）即为每次需要舍掉一半数据
+//几种情况：
+//4，5，6，7，8，9，1，2，3。mean = 8；target > 8（舍去左边）(注意，这里target是小于左边界的) |||target < 8,可能左可能右，通过target与右边界值确定
+//7,8,9,1,2,3,4,5,6。 mean = 2;同样的分析方法，结合上面就可以给出判断条件，但是要注意多比较一个中间值与左右值的关系，不然不能同意这两种情况
+//最后还有一种特殊情况，只剩下，1,2如果target = 2;这是nums[mean] == nums[left]，所以不能忘记判断时的等号
+
+//关于二分查找要注意，停止条件就是找到目标（target == nums[mean]）和找不到left > right(注意，如果左右值相等，也是可以找到)
+//每次return新的左右边界（记得要在中间值基础上加一或者减一）
+
+class Solution {
+public:
+    int binarySearch(int left, int right, int target, vector<int>& nums)
+{
+	//cout << left << " " << right << endl;
+	int mean = (left + right) / 2;
+	if (target == nums[mean])
+	{
+		return mean;
+	}
+	if (right < left)
+	{
+		return -1;
+	}
+	if (target > nums[mean])
+	{
+		if (nums[mean] >= nums[left] || target < nums[left])			//若不加等号，中间值即为左值的时候就不能正确的找到该舍去的一半
+		{
+			return binarySearch(mean + 1, right, target, nums);
+		}
+		else
+		{
+			return binarySearch(left, mean - 1, target, nums);
+		}
+	}
+	else
+	{
+		if (nums[mean] <= nums[right] || target > nums[right])
+		{
+			return binarySearch(left, mean - 1, target, nums);
+		}
+		else
+		{
+			return binarySearch(mean + 1, right, target, nums);
+		}
+	}
+}
+
+int search(vector<int>& nums, int target) {
+	if (nums.empty())
+	{
+		return -1;
+	}
+	int res = binarySearch(0, nums.size() - 1, target, nums);
+	return res;
+}
+};

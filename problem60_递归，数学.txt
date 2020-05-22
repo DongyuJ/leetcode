@@ -1,0 +1,65 @@
+//Jun/27/2018 ac 7ms beats 61%
+//利用递归的方法，每一层通过数学方法计算出当前层的开头数字，并将去除这个数字后的数组以及取余处理过后的k传入下一层
+//需要注意k=1和k=0的特殊情况，分别是正序和逆序，可以直接输出
+
+class Solution {
+public:
+    int factorial(int n)
+{
+	int res = 1;
+	while (n > 0)
+	{
+		res *= n;
+		n--;
+	}
+	return res;
+}
+
+void recursion(vector<int>& nums, int k, string& res)
+{
+	if (nums.size() == 1)
+	{
+		res += nums[0] + '0';
+		return;
+	}
+	int n = nums.size();
+	int total = factorial(n);
+	int num = total / n;
+
+	if (k == 1)
+	{
+		for (int i = 0; i < nums.size(); i++)
+		{
+			res += nums[i] + '0';
+		}
+		return;
+	}
+	int head = (k - 1) / num;
+	res += nums[head] + '0';
+	nums.erase(nums.begin() + head);
+	k = k % num;
+	if (k == 0)
+	{
+		for (int i = nums.size() - 1; i > -1; i--)
+		{
+			res += nums[i] + '0';
+		}
+		return;
+	}
+	recursion(nums, k, res);
+	return;
+}
+
+string getPermutation(int n, int k) {
+	string res;
+	vector<int> nums;
+	for (int i = 1; i <= n; i++)
+	{
+		nums.push_back(i);
+	}
+
+	recursion(nums, k, res);
+
+	return res;
+}
+};

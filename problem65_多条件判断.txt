@@ -1,0 +1,87 @@
+//Jun/28/2018 ac 8ms beats 65%
+//需要考虑的情况比较多，细心一点就可以了
+
+//1.去首尾空格，并在此后判断是否为空
+//2.如果第一位有符号，去掉符号
+//3.对剩下的字符串进行一次遍历，如果遇到数字，e和E以及‘.’以外的字符直接返回0（e后面的符号在遇到e的时候就处理掉）
+//4.遇到‘.’：先检查dot标志位，因为不能出现两个小数点，然后还需要检查是否只有单独的一个小数点，这样是不合法的（小数点在第一位或者左后一位也是可以的）
+//5.遇到‘e’和‘E’，首先检查e标志位，将e和dot置为1因为e后面不能再出现e或者小数点。
+//  然后e不能出现在第一位或者最后一位，同时如果e的前一位是小数点，那么再前一位必须存在并且是数字
+//  再判断e后面是否有符号，如果有的话，不能是最后一位。
+
+class Solution {
+public:
+        bool isNumber(string s) {
+	bool dot = 0;
+	bool e = 0;
+	while (s[0] == ' ')
+	{
+		s.erase(s.begin());
+	}
+	while (s[s.size() - 1] == ' ')
+	{
+		s.erase(s.end()-1);
+	}
+    if (s.empty())
+	{
+		return false;
+	}        
+	if (s[0] == '+' || s[0] == '-')
+	{
+		s.erase(s.begin());
+		if (s.empty() || ((s[0] == '.' || s[0] == 'e' || s[0] == 'E')&& s.size() == 1))
+		{
+			return false;
+		}
+	}
+	for (int i = 0; i < s.size(); i++)
+	{
+		if ((s[i] < '0' || s[i] > '9') && (s[i] != 'e' && s[i] != 'E' && s[i] != '.'))
+		{
+			return false;
+		}
+		if (s[i] == '.')
+		{
+			if (dot)
+			{
+				return false;
+			}
+			dot = true;
+            		if (s.size() == 1)
+			{
+				return false;
+			}
+			continue;
+		}
+		if (s[i] == 'e' || s[i] == 'E')
+		{
+			if (e)
+			{
+				return false;
+			}
+			e = 1;
+			if (i == 0 || i == s.size() - 1)
+			{
+				return false;
+			}
+			else if (s[i - 1] == '.')
+			{
+				if(i == 1 || s[i - 2] > '9' || s[i - 2] < '0')
+                {
+                    return false;
+                }
+			}
+			dot = 1;
+			if (s[i + 1] == '+' || s[i + 1] == '-')
+			{
+				i += 1;
+				if (i == s.size() - 1)
+				{
+					return false;
+				}
+			}
+		}
+	}
+	return true;
+}
+};

@@ -1,0 +1,58 @@
+//Mar/18/2019 ac
+//不是很完美的做法，如果value和id不是一一对应，就不能成功
+//先按next顺序走一遍链表，建立一个复制， 并将新的(*)节点存到map中
+//map的key为那个节点的val， value即为节点指针方便后面直接指向节点
+
+//然后再按next走一遍，每到一个点就访问random指针
+//如果random存在（*），通过map中储存的节点将random指针指向
+//正确的新节点
+
+//（*）处为一开始做错的地方。一是一定要将新的节点存到map中
+//二是有节点不存在random指针的情况要注意。 
+
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* next;
+    Node* random;
+
+    Node() {}
+
+    Node(int _val, Node* _next, Node* _random) {
+        val = _val;
+        next = _next;
+        random = _random;
+    }
+};
+*/
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        map<int, Node*> dict;
+        Node* head_c = new Node(-1, NULL, NULL);
+        Node* dummy = head_c;
+        
+        Node* cur = head;
+        while(cur != NULL){
+            Node* newNode = new Node(cur->val, NULL, NULL);
+            dummy->next = newNode;
+            dummy = dummy->next;
+            dict[cur->val] = newNode;
+            cur = cur->next;
+        }
+        
+        cur = head;
+        dummy = head_c->next;
+        while(cur !=  NULL){
+            if(cur->random != NULL){
+                dummy->random = dict[cur->random->val];
+            }
+            dummy = dummy->next;
+            cur = cur->next;
+        }
+        
+        return head_c->next;
+    }
+};

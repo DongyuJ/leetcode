@@ -1,0 +1,42 @@
+//题目很简单，第一次刷未解出
+
+//利用二分查找，每次确定pivot在左端还是右端，这里要注意，
+//如果是在右段，可以加一因为我们是要找到超过pivot的第一个点
+//在左段就不可以不然有可能越过pivot
+
+//当搜索区域没有乱序，证明left所指就是我们要找的结果
+
+//没做出来的原因还是太死板，二分查找常要考虑各种变体
+//本题就是要想到查找的位置不在位上，左右处理不对称
+//还有可能有的题是需要查到尽头，另外特别小心能否相等（边界问题）
+
+//本题中加上了等号是为了将[2,1]这种情况处理为向后半段查找
+
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+        if(nums.size() == 1){
+            return nums[0];
+        }
+        
+        int left = 0;
+        int right = nums.size() - 1;
+        
+        while(left < right){
+            if(nums[left] <= nums[right]){
+                return nums[left];
+            }
+            
+            int mid = (left + right) / 2;
+            
+            if(nums[mid] >= nums[left]){
+                left = mid + 1;
+            }
+            else{
+                right = mid;
+            }
+        }
+        
+        return nums[left];
+    }
+};

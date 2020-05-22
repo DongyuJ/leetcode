@@ -1,0 +1,61 @@
+//Jul/13/2018 ac 12ms beats 99.5%
+
+//这道题前前后后花了好久才最终做出来,主要还是没有掌握处理树问题的回溯的思想
+
+//错误思路一、运用深度优先搜索，因为搜索完成的时候已经遍历完成了，在没有回溯的情况下有没有办法建立树结构，所以没有办法记录
+
+//错误思路二、每次传入左子树或者右子树，由于每次新建节点的问题，导致树结构没有形成
+
+//最后的思路是运用动态规划，向每个节点的左右子节点传入起点和终点，要注意的是，各个节点的值也是有要求的
+//将i作为当前节点的值，然后将得到的左右节点集合相互配对，插入到当前新建的节点然后将整个节点加入到返回的容器中，最后返回的即为给出起始点和终点的
+//节点集合（包括了所有子树）
+
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<TreeNode*> generateSubTrees(int start, int end)
+    {
+        vector<TreeNode*> res;
+        if(start > end)
+        {
+            res.push_back(NULL);
+            return res;
+        }
+        
+        for(int i = start; i <= end; i++)
+        {
+            vector<TreeNode*> left = generateSubTrees(start,i-1);
+            vector<TreeNode*> right = generateSubTrees(i+1,end);
+            for(int j = 0; j < left.size(); j++)
+            {
+                for(int k = 0; k < right.size(); k++)
+                {
+                    TreeNode* T = new TreeNode(i);
+                    T->left = left[j];
+                    T->right = right[k];
+                    res.push_back(T);
+                }
+            }
+        }
+        return res;
+    }
+    
+    vector<TreeNode*> generateTrees(int n) {
+        vector<TreeNode*> res;
+        if(n < 1)
+        {
+            return res;
+        }
+        res = generateSubTrees(1,n);
+        return res;
+    }
+};

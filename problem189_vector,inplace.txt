@@ -1,0 +1,20 @@
+//sep/19/2018 ac
+//将最后k位从vector中删除然后再添加到开头，用反转的方法比较看上去简洁一些
+
+class Solution {
+public:
+    void rotate(vector<int>& nums, int k) {
+        k = k % nums.size();
+        if(!k)
+        {
+            return ;
+        }
+        
+        for(int i = 0; i < k; i++)
+        {
+            int temp = nums[nums.size() - 1];
+            nums.erase(nums.end() - 1);
+            nums.insert(nums.begin(), temp);
+        }
+    }
+};

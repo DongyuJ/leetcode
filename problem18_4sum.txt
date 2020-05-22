@@ -1,0 +1,70 @@
+//may/30/2018 ac 60ms
+//与3sum类似，只不过需要固定两个点再用指针搜索；
+//一个小错误：continue会将外层的循环也行进一次；
+//需要判断size小于三的时候
+
+class Solution {
+public:
+    vector<vector<int> > fourSum(vector<int>& nums, int target) {
+        sort(nums.begin(),nums.end());
+        //cout<<nums.size();
+        vector<vector<int> > res;
+        int pi,bi = 0;
+        if(nums.size() < 4)
+        {
+            return res;
+        }
+        for(int i = 0; i < nums.size() - 3; i++)
+        {
+            //cout<<i<<endl;
+            while(i != 0 && nums[i - 1] == nums[i])
+            {
+                //cout<<"1";
+                i++;
+                //continue;
+            }
+            for(int j = i + 1; j < nums.size() - 2; j++)
+            {
+                //cout<<j<<endl;
+                while(j != i + 1 && nums[j - 1] == nums[j])
+                {
+                    j++;
+                    //cout<<"1";
+                    //continue;
+                }
+                pi = j + 1;
+                bi = nums.size() - 1;
+                while(pi < bi)
+                {
+                    //cout<<i<<" "<<j<<" "<<pi<<" "<<bi<<endl;
+                    if(nums[i] + nums[j] + nums[pi] + nums[bi] == target)
+                    {
+                        int t[] = {nums[i],nums[j],nums[pi],nums[bi]};
+                        //cout<<"1";
+                        vector<int> temp(t,t+4);
+                        res.push_back(temp);
+                        pi++;
+                        bi--;
+                    }
+                    else if(nums[i] + nums[j] + nums[pi] + nums[bi] > target)
+                    {
+                        bi--;
+                    }
+                    else
+                    {
+                        pi++;
+                    }
+                    while((pi - 1 > j) && (nums[pi] == nums[pi - 1]))
+                    {
+                        pi++;
+                    }
+                    while((bi < nums.size() - 1) && (nums[bi] == nums[bi + 1]))
+                    {
+                        bi--;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+};

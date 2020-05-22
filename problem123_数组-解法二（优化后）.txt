@@ -1,0 +1,38 @@
+//ac beats 57% Jan/8/2018
+//an follow up of problem 120 and problem 121
+//time complexity: O(n)
+
+//Use 2 dp table "left" and "right" to store the best profit we can get 
+//from beginning day to every day and from every day to the 
+//last day. This is divide all the days into two part, for each day
+//the best profit we can got from day 1 to that day is saved in "left"
+//and the best profit from that day to the last day is saved in "right"
+//we can search every day and find the day with a largest value of
+//left[i] + right[i], that is the best split 
+
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        if(prices.size() < 2){
+            return 0;
+        }
+        int l = prices.size();
+        int maxi = prices[l - 1];
+        int mini = prices[0];
+        vector<int> left(l, 0);
+        vector<int> right(l, 0);
+        int res = 0;
+        
+        for(int i = 1; i < l; i++){
+            mini = min(mini, prices[i]);
+            maxi = max(maxi, prices[l - i - 1]);
+            left[i] = max(left[i - 1], prices[i] - mini);
+            right[l - i - 1] = max(right[l - i], maxi - prices[l - i - 1]);
+        }
+        
+        for(int i = 0; i < l; i++){
+            res = max(res, left[i] + right[i]);
+        }
+        return res;
+    }
+};

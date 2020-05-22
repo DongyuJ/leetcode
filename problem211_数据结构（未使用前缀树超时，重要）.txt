@@ -1,0 +1,72 @@
+//这个方法是每次serach都将长度符合的进行比较，但是最后超时了
+
+class WordDictionary {
+private:
+    vector<string> dict;
+    vector<int> len_idx;
+    int max_len;
+    
+    
+public:
+    /** Initialize your data structure here. */
+    WordDictionary() {
+        max_len = 0;
+        len_idx = {0};
+    }
+    
+    /** Adds a word into the data structure. */
+    void addWord(string word) {
+        if(word.size() > max_len){
+            for(int i = max_len + 1; i < word.size(); i++){
+                len_idx.push_back(dict.size() );
+            }
+            len_idx.push_back(dict.size() + 1);
+            
+            dict.push_back(word);
+            max_len = word.size();
+        }
+        else{
+            int insert_pos = len_idx[word.size() - 1];
+            
+            dict.insert(dict.begin() + insert_pos, word);
+            for(int i = word.size(); i <= max_len; i++){
+                len_idx[i] ++;
+            }
+        }
+        /*
+        for(int i = 0; i < dict.size(); i++){
+            cout<<dict[i]<<endl;
+        }
+        cout<<endl;
+        */
+    }
+    
+    /** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
+    bool search(string word) {
+        int len = word.size();
+        if(len > max_len){
+            return false;
+        }
+        
+        for(int i = len_idx[len - 1]; i < len_idx[len]; i++){
+            bool find = 1;
+            for(int j = 0; j < len; j++){
+                if(word[j] != '.' && word[j] != dict[i][j]){
+                    find = 0;
+                    break;
+                }
+            }
+            if(find){
+                return true;
+            }
+        }
+        return false;
+    }
+};
+
+/**
+ * Your WordDictionary object will be instantiated and called as such:
+ * WordDictionary* obj = new WordDictionary();
+ * obj->addWord(word);
+ * bool param_2 = obj->search(word);
+ */

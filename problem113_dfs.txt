@@ -1,0 +1,50 @@
+//sep/20/2018 ac
+//dfs的同时记录下路径，注意回溯的时候路径的删除等
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void findpath(TreeNode* T, int target, int sum, vector<vector<int>>& path, vector<int> temp)
+    {
+        if(!T)
+        {
+            return ;
+        }
+        sum += T->val;
+        temp.push_back(T->val);
+        if(T->left == NULL && T->right == NULL)
+        {
+            if(sum == target)
+            {
+                path.push_back(temp);
+            }
+            return ;
+        }
+        else
+        {
+            findpath(T->left, target, sum, path, temp);
+            findpath(T->right, target, sum, path, temp);
+            sum -= T->val;
+            temp.pop_back();
+            return ;
+        }
+    }
+        
+    vector<vector<int>> pathSum(TreeNode* root, int sum) {
+        vector<vector<int>> path;
+        if(!root)
+        {
+            return path;
+        }
+        findpath(root, sum, 0, path, {});
+        return path;
+    }
+};

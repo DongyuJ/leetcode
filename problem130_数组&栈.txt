@@ -1,0 +1,102 @@
+//Feb/24/2019 ac beats 96%
+//这题不难，就是麻烦，必须有相邻的‘O’一直连到四边才有可能
+//保持‘O’，所以我们就先将四边的‘O’打入栈内，依次发掘
+//他们相邻的‘O’在map上记录，这些被记录的就是最后结果中的‘O’
+//注意要记录一下已经发觉过的‘O’不然遇到[['O','O'], ['O', 'O']]会超时
+
+class Solution {
+public:
+    bool OutOfBound(int x, int y, int m, int n){
+        if(x < 0 || x > m -1){
+            return true;
+        }
+        if(y < 0 || y > n - 1){
+            return true;
+        }
+        return false;
+    }
+    
+    void solve(vector<vector<char>>& board) {
+        if(board.empty()){
+            return;
+        }
+        int m = board.size();
+        int n = board[0].size();
+        vector<vector<bool>> used(m);
+        for(int i = 0; i < m; i++){
+            used[i].resize(n, 0);
+        }
+        vector<vector<bool>> map(m);
+        for(int i = 0; i < m; i++){
+            map[i].resize(n, 0);
+        }
+        
+        stack<vector<int>> s;
+        for(int i = 0; i < m; i++){
+            if(board[i][0] == 'O'){
+                vector<int> point = {i, 0};
+                used[point[0]][point[1]] = 1;
+                s.push(point);
+            }
+            if(board[i][n - 1] == 'O'){
+                vector<int> point = {i, n - 1};
+                used[point[0]][point[1]] = 1;
+                s.push(point);
+            }
+        }
+        for(int i = 1; i < n - 1; i++){
+            if(board[0][i] == 'O'){
+                vector<int> point = {0, i};
+                used[point[0]][point[1]] = 1;
+                s.push(point);
+            }
+            if(board[m - 1][i] == 'O'){
+                vector<int> point = {m - 1, i};
+                used[point[0]][point[1]] = 1;
+                s.push(point);
+            }
+        }
+        
+        while(!s.empty()){
+            vector<int> point = s.top();
+            s.pop();
+            map[point[0]][point[1]] = 1;
+            if(!OutOfBound(point[0] - 1, point[1], m, n) && board[point[0] - 1][point[1]] == 'O'){
+                vector<int> tem = {point[0] - 1, point[1]};
+                if(used[tem[0]][tem[1]] == 0){
+                    used[tem[0]][tem[1]] = 1;
+                    s.push(tem);
+                }
+            }
+            if(!OutOfBound(point[0], point[1] - 1, m, n) && board[point[0]][point[1] - 1] == 'O'){
+                vector<int> tem = {point[0], point[1] - 1};
+                if(used[tem[0]][tem[1]] == 0){
+                    used[tem[0]][tem[1]] = 1;
+                    s.push(tem);
+                }
+            }
+            if(!OutOfBound(point[0] + 1, point[1], m, n) && board[point[0] + 1][point[1]] == 'O'){
+                vector<int> tem = {point[0] + 1, point[1]};
+                if(used[tem[0]][tem[1]] == 0){
+                    used[tem[0]][tem[1]] = 1;
+                    s.push(tem);
+                }
+            }
+            if(!OutOfBound(point[0], point[1] + 1, m, n) && board[point[0]][point[1] + 1] == 'O'){
+                vector<int> tem = {point[0], point[1] + 1};
+                if(used[tem[0]][tem[1]] == 0){
+                    used[tem[0]][tem[1]] = 1;
+                    s.push(tem);
+                }
+            }
+        }
+        
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                if(map[i][j] == 0){
+                    board[i][j] = 'X';
+                }
+            }
+        }
+    }
+};

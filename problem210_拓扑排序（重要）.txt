@@ -1,0 +1,55 @@
+//这题可以用之前的算出所有post-visit number 来做，但是会超时
+
+//分析：
+//1.求post-visit： 跑一次dfs是O（|E|），然后对他们排序是O（|V|），
+//因为我只计算了post，然后post值是从0到|V|，我只需要把每个点都
+//过一遍，将这个点记录在对应的post值底下，我就可以只用O（|V|）
+//将所有顶点按照从小到大顺序排好，所以总共是O（|V| + |E|）
+
+//2.拓扑排序：计算所有的indegree（O（|E|）），对于每一个indegree
+//为0的点都将它指向的点indegree减一，然后将它的indegree改为-1
+//表示这个点已经处理完，再将其记录到result中（至此已经完成到这个点
+//为止的拓扑排序），一直循环到没有indegree为0的点O（|V|）
+//此时，若是result中记录了|V|个点，说明成功排完所有课程，反之不能
+
+//其实就是每次都先上没有前序课程的，上完这门课，将所有谦虚课程
+//为这么课的课减去一个依赖项
+
+//逻辑上来说，其实都是一样的复杂度，可能是细节方面的处理
+//导致前一种超时了
+
+class Solution {
+public:
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<int> indegree(numCourses, 0);
+        vector<int> result;
+        
+        for(int i = 0; i < prerequisites.size(); i++){
+            indegree[prerequisites[i][0]]++;
+        }
+        
+        bool updated = 1;
+        while(updated){
+            updated = 0;
+            for(int i = 0; i < numCourses; i++){
+                if(indegree[i] == 0){
+                    updated = 1;
+                    indegree[i] = -1;
+                    result.push_back(i);
+                    
+                    for(int j = 0; j < prerequisites.size(); j++){
+                        if(prerequisites[j][1] == i){
+                            indegree[prerequisites[j][0]]--;
+                        }
+                    }
+                }
+            }
+        }
+        
+        if(result.size() != numCourses){
+            result = {};
+        }
+        
+        return result;
+    }
+};

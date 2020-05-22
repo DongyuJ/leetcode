@@ -1,0 +1,36 @@
+//注意前三个是初始情况
+
+//到某个数（如果加上他本身）的最大是
+//dp[i-2] + sums[i] 或者dp[i-3] + sums[i]
+
+//最终的最大值为倒数一二位中较大的那一个
+//（因为这两个一定有一个被包含）
+
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        if(nums.size() == 0){
+            return 0;
+        }
+        
+        if(nums.size() == 1){
+            return nums[0];
+        }
+        
+        if(nums.size() == 2){
+            return max(nums[0], nums[1]);
+        }
+        
+        vector<int> dp(nums.size(), 0);
+        
+        dp[0] = nums[0];
+        dp[1] = nums[1];
+        dp[2] = nums[0] + nums[2];
+        
+        for(int i = 3; i < nums.size(); i++){
+            dp[i] = nums[i] + max(dp[i - 2], dp[i - 3]);
+        }
+        
+        return max(dp[nums.size() - 1], dp[nums.size() - 2]);
+    }
+};

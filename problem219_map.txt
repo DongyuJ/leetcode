@@ -1,0 +1,26 @@
+//没啥好说的就是map的应用，记录一个数字最后出现的idx
+
+class Solution {
+public:
+    bool containsNearbyDuplicate(vector<int>& nums, int k) {
+        if(nums.size() <= 1){
+            return 0;
+        }
+        
+        map<int, int> dict;
+        
+        for(int i = 0; i < nums.size(); i++){
+            if(dict.find(nums[i]) == dict.end()){
+                dict[nums[i]] = i;
+            }
+            else if(i - dict[nums[i]] <= k){
+                return true;
+            }
+            else{
+                dict[nums[i]] = i;
+            }
+        }
+        
+        return false;
+    }
+};

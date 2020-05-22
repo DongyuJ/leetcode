@@ -1,0 +1,27 @@
+//这个比较类似于之前的dp问题，但是由于排列顺序的原因
+//我们从右上角开始进行，大的在下面，小的在左边，就可以沿
+//路径找到需要的目标了
+
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        if(matrix.empty() || matrix[0].empty()){
+            return false;
+        }
+        
+        int r = 0, c = matrix[0].size() - 1;
+        
+        while(r < matrix.size() && c >= 0){
+            if(matrix[r][c] == target){
+                return true;
+            }
+            if(matrix[r][c] > target){
+                c--;
+            }
+            else{
+                r++;
+            }
+        }
+        return false;
+    }
+};

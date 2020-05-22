@@ -1,0 +1,97 @@
+//Aug/3/2018 ac 0ms beats 100%
+//利用深度优先搜索，每一层可以放1,2,3位数字，放之前先检查一下是否合格（不能有开头的0，不能大于255），然后注意“.”的加入和删减
+//当搜索到了第四层，如果剩下的多于三个数字，直接返回，否则判断是否合法，合法就进行记录
+
+//要注意在进行dfs的时候，每一层也要注意一下剩下的数字个数，如果已经达到最后一位了，就直接返回，避免越界。	
+
+class Solution {
+public:
+    
+    bool IsValid(string s)
+    {
+        if(s.size() == 3 && (s[0] > '2' || s[0] == '0'))
+        {
+            return false;
+        }
+        else if(s.size() == 3 && s[0] == '2')
+        {
+            if(s[1] > '5')
+            {
+                return false;
+            }
+            else if(s[1] == '5')
+            {
+                if(s[2] > '5')
+                {
+                    return false;
+                }
+            }
+        }
+        else if(s.size() == 2 && s[0] == '0')
+        {
+            return false;
+        }
+        return true;
+    }
+    
+    void DFS(string s, int idx,int layer, vector<string>& res, string temp)
+    {
+        if(layer == 4)
+        {
+            string temp1;
+            while(idx != s.size())
+            {
+                temp1 += s[idx];
+                idx++;
+            }
+            if(temp1.size() > 3)
+            {
+                return;
+            }
+            else
+            {
+                if(IsValid(temp1))
+                {
+                    temp += "." + temp1;
+                    res.push_back(temp);
+                }
+                return;
+            }
+        }
+        for(int i = 1; i <= 3; i++)
+        {
+            if(idx + i >= s.size())
+            {
+                return;
+            }
+            string temp1;
+            if(idx)
+            {
+                temp += ".";
+            }
+            for(int j = 0; j < i; j++)
+            {
+                temp1 += s[idx + j];
+            }
+            if(IsValid(temp1))
+            {
+                //cout<<layer<<endl;
+                DFS(s,idx + i,layer+1,res,temp+temp1);
+            }
+            if(idx)
+            {
+                temp.pop_back();
+            }
+        }
+    }
+    
+    vector<string> restoreIpAddresses(string s) {
+        vector<string> res;
+        if(s.size() < 4)
+        {
+            return res;
+        }
+        DFS(s,0,1,res,"");
+        return res;
+    }
+};

@@ -1,0 +1,41 @@
+//mar/16/2019 ac 
+//很巧妙的一题，利用2进制，记录二进制下每一位出现的次数
+//出现次数不是三的倍数的位，还原出来就是单个的那个数字。
+
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        vector<int> bitmap_positive(32, 0);
+        vector<int> bitmap_negative(32, 0);
+        
+        for(int i = 0; i < nums.size(); i++){
+            int cnt = 0;
+            if(nums[i] >= 0){
+                while(nums[i] > 0){
+                    bitmap_positive[cnt] += (nums[i] & 1);
+                    nums[i] = nums[i] >> 1;
+                    cnt++;
+                }
+            }
+            else{
+                long long temp = (long long)abs(nums[i] + 1) + 1;
+                while(temp > 0){
+                    bitmap_negative[cnt] += (temp & 1);
+                    temp = temp >> 1;
+                    cnt++;
+                }
+            }
+        }
+        
+        int res = 0;
+        for(int i = 0; i < 32; i++){
+            if(bitmap_positive[i] % 3 != 0){
+                res += pow(2, i);
+            }
+            else if(bitmap_negative[i] %3 != 0){
+                res -= pow(2, i);
+            }
+        }
+        return res;
+    }
+};

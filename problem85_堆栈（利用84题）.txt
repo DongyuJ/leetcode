@@ -1,0 +1,66 @@
+//Jul/26/2018 ac 16ms beats 30%
+//拿到题目的时候毫无思路，看了标签思考了很久也不知道动态规划要怎么解决，还是上网看了别人的思路才想到可以用84题的思路解决
+//具体来说就是，84题通过堆栈解决了直方图找最大矩形的问题，那么我们就将这个2d图以行为单位切割，每一行作为一个直方图传入，得出最大的矩形
+//最后找出所有最大矩形中的最大矩形。不需要纠结如果是断开的直方图怎么办，当前行为0的即使上面还有1存在也暂时当做0处理，因为前面的行中，已经处理过了
+//即之前的行已经将该“断开”的直方图上面的部分处理过了，由于这里是断开的，所以当前行如果算上这一列，也无法形成矩形，不算上的话，就和上面某一行是一样的
+
+class Solution {
+public:
+    int largestRectangleArea(vector<int>& heights) {
+        stack<int> st;
+        int idx = 0;
+        heights.push_back(0);
+        int res = 0;
+        while(idx != heights.size())
+        {
+            if(st.empty() || st.top() < heights[idx])
+            {
+                st.push(heights[idx]);
+                idx++;
+            }
+            else
+            {
+                int cnt = 1;
+                while(!st.empty() && st.top() > heights[idx])
+                {
+                    res = max(res, cnt * st.top());
+                    st.pop();
+                    cnt++;
+                }
+                for(int i = 0; i < cnt; i++)
+                {
+                    st.push(heights[idx]);
+                }
+                idx++;
+            }
+        }
+        return res;
+    }
+    int maximalRectangle(vector<vector<char>>& matrix) {
+        int res = 0;
+        for(int i = 0; i < matrix.size(); i++)
+        {
+            vector<int> cut;
+            for(int j = 0; j < matrix[i].size(); j++)
+            {
+                if(matrix[i][j] == '1')
+                {
+                    cut.push_back(1);
+                    int h = i - 1;
+                    while(h >= 0 && matrix[h][j] == '1')
+                    {
+                        cut[cut.size() - 1]++;
+                        h--;
+                    }
+                }
+                else
+                {
+                    cut.push_back(0);
+                }
+            }
+            int m = largestRectangleArea(cut);
+            res = max(res,m);
+        }
+        return res;
+    }
+};

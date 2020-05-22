@@ -1,0 +1,18 @@
+//may/24/2108 ac 31ms
+
+class Solution {
+public:
+    int reverse(int x) {
+        long long res = 0;
+        while(x != 0){			//int 不够储存
+            res = res * 10;
+            res = res + x % 10;
+            x /= 10;
+            if(abs(res) > pow(2,31))	//INT_MAX/10 也可以表示这个值
+            {
+                return 0;
+            }
+        }
+    return res;
+    }
+};

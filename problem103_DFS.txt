@@ -1,0 +1,45 @@
+//Aug/27/2018 ac 4ms beats 23%
+//与102相似，只是在偶数行每次向前插入即可
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void DFS(int layer, vector<vector<int>>& res, TreeNode* T)
+    {
+        if(T == NULL)
+        {
+            return;
+        }
+        if(res.size() < layer)
+        {
+            res.push_back({T->val});
+        }
+        else
+        {
+            if(layer % 2)
+            {
+                res[layer - 1].push_back(T->val);
+            }
+            else
+            {
+                res[layer - 1].insert(res[layer - 1].begin(),T->val);
+            }
+        }
+        DFS(layer+1, res, T->left);
+        DFS(layer+1, res, T->right);
+    }
+    
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        vector<vector<int>> res;
+        DFS(1, res, root);
+        return res;
+    }
+};

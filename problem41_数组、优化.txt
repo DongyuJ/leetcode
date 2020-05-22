@@ -1,0 +1,34 @@
+//Jun/3/2018 ac 8ms（参考网上）
+
+//本题的关键在于题目要求时间复杂度为O（n）即，只能使用单重循环
+//空间复杂度为不再开新的数组，所以只能在当前数组操作
+//题目要求找到第一个数组中没有的正数，那么我们可以通过一次循环，将对应的数字摆到对应的位置，这样只要再循环一次就可以知道那个数字缺少了
+//解法为，将每一个遇到的数字直接摆到它对应的位置，并从当前位置继续向下运作（这里要注意，避开大于数组长度的数字，负数，以及已经在正确位置的数字）
+//若未避开已经在位置的数字会造成死循环（不停地交换并执行当前i）
+
+class Solution {
+public:
+    int firstMissingPositive(vector<int>& nums) {
+        int temp;
+        if(nums.empty())
+        {return 1;}
+        for(int i = 0; i < nums.size(); i++)
+        {
+            if (nums[i] <= nums.size() && nums[i] > 0 && nums[nums[i] - 1] != nums[i])//注意么交换的时候顺序一定不能错，如果先覆盖了nums[i]的值后面的数字会出错
+		    {
+			    temp = nums[nums[i] - 1];
+			    nums[nums[i] - 1] = nums[i];
+			    nums[i] = temp;
+			    i--;
+		    }     
+        }
+        for(int i = 0; i < nums.size(); i++)
+        {
+            if(nums[i] != i + 1)
+            {
+                return i+1;
+            }
+        }
+        return nums.size() + 1;
+    }
+};

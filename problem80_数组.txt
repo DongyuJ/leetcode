@@ -1,0 +1,31 @@
+//Jul/18/2018 ac 8ms beats 100%
+//我的做法是，发现重复超过两次就删掉该元素
+//其实这种要求常数空间的题目应该重写原数组来完成，就是看两位之后还是不是当前元素，如果不是，就重写第k位（k为重写数组的计数器）
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        int cnt = 1;
+        if(nums.empty())
+        {
+            return 0;
+        }
+        for(int i = 1; i < nums.size(); i++)
+        {
+            if(nums[i] == nums[i - 1])
+            {
+                cnt++;
+            }
+            else
+            {
+                cnt = 1;
+            }
+            if(cnt > 2)
+            {
+                nums.erase(nums.begin() + i);
+                i--;
+            }
+        }
+        return nums.size();
+    }
+};

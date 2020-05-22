@@ -1,0 +1,51 @@
+//Jun/12/2018 ac 26ms O（n2）
+//题目并不难，只需要把数独成立的条件翻译出来即可
+//利用一个双重循环同时检查行列和区域的数字情况，然后内层循环结束代表着第i行/第i列/第i个九宫格检查完毕
+//行列的检查直接检查i，j为下角标的map就可以了，九宫格的检查需要将i，j转化为新的x，y，列一个表格就可以找到之间的规律了
+//另外，map的清零操作 map.clear();
+
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char>>& board) {
+        map<char,int> Row;
+        map<char,int> clomn;
+        map<char,int> area;
+        for(int i = 0; i < 9; i++)
+        {
+            for(int j = 0; j < 9; j++)
+            {
+                if(board[i][j] != '.' && Row.count(board[i][j]) != 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    Row[board[i][j]] == 1;
+                }
+                if(board[j][i] != '.' && clomn.count(board[j][i]) != 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    clomn[board[j][i]] == 1;
+                }
+                int x, y;
+			    x = (j / 3) + 3 * (i / 3);
+			    y = (j % 3) + 3 * (i % 3);
+                if(board[x][y] != '.' && area.count(board[x][y]) != 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    area[board[x][y]] == 1;
+                }
+            }
+            Row.clear();
+            clomn.clear();
+            area.clear();
+        }
+        return true;
+    }
+};

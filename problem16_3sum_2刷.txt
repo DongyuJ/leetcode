@@ -1,0 +1,39 @@
+//这个方法用了双指针效率有所提高
+//先固定一个值然后双指针逼近正确答案，
+//保证顺序为：左指针，固定值，右指针
+
+class Solution {
+public:
+    int threeSumClosest(vector<int>& nums, int target) {
+        int dist = 0x7fffffff, res;
+        
+        sort(nums.begin(), nums.end());
+        
+        for(int i = 1; i < nums.size() - 1; i++){
+            int left = 0, right = nums.size() - 1;
+            while(left < right){
+                if(i == left || i == right){
+                    break;
+                }
+                int threeSum = nums[left] + nums[right] + nums[i];
+                if(threeSum == target){
+                    return target;
+                }
+                
+                if(abs(threeSum - target) < dist){
+                    dist = abs(threeSum - target);
+                    res = threeSum;
+                }
+                
+                if(threeSum > target){
+                    right--;
+                }
+                else{
+                    left++;
+                }
+            }
+        }
+        
+        return res;
+    }
+};

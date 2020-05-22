@@ -1,0 +1,41 @@
+//Jun/21/2018 ac 12ms beats 99.94%
+//用了三重循环，思路是，每次添加一个数字，这个数字分别可以加在原数组的第1到最后一位，形成一个新的vector
+//所以，nums中每个数字需要进行一次循环，而后需要对已经存在的数组每一行进行recall[0].size()次循环，这里要小心越界问题
+
+//似乎还可以进行多次的位置交换，但是要找好交换的规律，等一下进行实践
+
+class Solution {
+public:
+    vector<vector<int>> permute(vector<int>& nums) {
+	vector<vector<int>> res;
+	if (nums.empty())
+	{
+		return res;
+	}
+	vector<int> temp;
+	vector<vector<int>> recall;
+	res.push_back({ nums[0] });
+	for (int k = 1; k < nums.size(); k++)			//每一次都需要清空结果，以输入增加了一个数字后的结果，用recall来记忆
+	{
+		recall = res;
+		res.clear();
+		for (int i = 0; i <= recall[0].size(); i++)	//注意由于头尾都可以添加，所以每一行需要重复n+1次
+		{
+			for (int j = 0; j < recall.size(); j++)	//对每一行的第i个位置添加
+			{
+				temp = recall[j];
+				if (i >= temp.size())		//防止越界
+				{
+					temp.push_back(nums[k]);
+				}
+				else
+				{
+					temp.insert(temp.begin() + i, nums[k]);
+				}
+				res.push_back(temp);
+			}
+		}
+	}
+	return res;
+}
+};

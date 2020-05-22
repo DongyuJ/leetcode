@@ -1,0 +1,68 @@
+//Jul/6/2018 ac 280ms last 10%
+//比较复杂的回溯，首先找到首字母匹配的点进行回溯，不断尝试向上下左右走，这里要注意
+//1.word只有一个字符的情况（在传入前就特殊处理了，因为这时候没有办法进行下一步，就没有办法达到判断成功的条件）
+//2.为了避免重复还要开一个used数组，判断，向下走之前都要先将used进行设置
+
+class Solution {
+public:
+   bool isFind(vector<vector<char>>& board, string word, int row, int col, int num, vector<vector<bool>> used)
+{
+	if (num == word.size())
+	{
+		return true;
+	}
+	if (board[row][col] != word[num] || used[row][col])
+	{
+		return false;
+	}
+	used[row][col] = 1;
+	if (row > 0 && isFind(board, word, row - 1, col, num + 1, used))
+	{
+		return true;
+	}
+	if (col > 0 && isFind(board, word, row, col - 1, num + 1, used))
+	{
+		return true;
+	}
+	if (row < board.size() - 1 && isFind(board, word, row + 1, col, num + 1, used))
+	{
+		return true;
+	}
+	if (col < board[0].size() - 1 && isFind(board, word, row, col + 1, num + 1, used))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool exist(vector<vector<char>>& board, string word) {
+	if (board.empty() || board[0].size() * board.size() < word.size())
+	{
+		return 0;
+	}
+	vector<vector<bool>> used(board.size());
+	for (int i = 0; i < used.size(); i++)
+	{
+		used[i].resize(board[0].size(), 0);
+	}
+	//cout << used[1][2];
+ 	for (int i = 0; i < board.size(); i++)
+	{
+		for (int j = 0; j < board[0].size(); j++)
+		{
+			if (board[i][j] == word[0])
+			{
+				if(word.size() == 1)
+               				 {
+                    				return true;
+                			}
+                			if (isFind(board, word, i, j, 0, used))
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+};

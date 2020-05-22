@@ -1,0 +1,54 @@
+//Jul/20/2018 ac 4ms beats 100%
+//这题没有想象的简单，首先要去掉前置的连续数字，因为我们需要确定起点，这里还要注意，1.多组连续数字的情况，2.连续数字直到最后一个的情况
+//接下来就是当后面遇到重复的时候（下一位与下下位相同，直接向前推到当前位与下一位不同的地方，将之前的链子连到下一位），这里要注意边界判断
+//发现我链表和树这种需要考虑前后结构的题不是很熟练
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        if(head == NULL || head->next == NULL)
+        {
+            return head;
+        }
+        while(head != NULL && head->next != NULL && head->val == head->next->val)
+        {
+            head = head->next;
+            if(head->next == NULL || head->val != head->next->val)//重置到下一位
+            {
+                head = head->next;
+            }
+            
+        }
+        if(head == NULL || head->next == NULL)
+        {
+            return head;
+        }
+        ListNode* l = head;
+        while(l->next != NULL && l->next->next != NULL)
+        {
+            if(l->next->val != l->next->next->val)
+            {
+                l = l->next;
+            }
+            else
+            {
+                ListNode* temp = l;
+                temp = temp->next;
+                while(temp->next != NULL && temp->val == temp->next->val)
+                {
+                    temp = temp->next;
+                }
+                l->next = temp->next;
+            }
+        }
+        return head;
+    }
+};

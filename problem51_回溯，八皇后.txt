@@ -1,0 +1,67 @@
+//Jun/24/2018 ac 6ms beats 74%
+//还是利用回溯的方法，填入每一个Q之前先判断有没有和上面的冲突的，没有就填入，有就再判断下一个位置
+//等下试试用数组记录代替判断函数，不知道效率会不会提高
+
+class Solution {
+public:
+    bool IsValid(vector<string>& temp, int row, int col)	//后面的还没有填入，只需要判断前面的即可
+{
+	for (int i = 0; i < row; i++)
+	{
+		if (temp[i][col] == 'Q')
+		{
+			return false;
+		}
+	}
+	for (int i = row, j = col; i >= 0 && j >= 0; i--, j--)	//判断左上
+	{
+		if (temp[i][j] == 'Q')
+		{
+			return false;
+		}
+	}
+	for (int i = row, j = col; i >= 0 && j < temp.size(); i--, j++)	//判断右上
+	{
+		if (temp[i][j] == 'Q')
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+void backtracking(vector<vector<string>>& res, vector<string>& temp, int n, int layer)
+{
+	if (layer == n)			//找到一组解
+	{
+		res.push_back(temp);
+		return;
+	}
+	
+	//int flag = 1;
+	for (int i = 0; i < n; i++)
+	{
+		if (IsValid(temp, layer, i))
+		{
+			temp[layer][i] = 'Q';
+			backtracking(res, temp, n, layer + 1);
+			temp[layer][i] = '.';			//回溯回来需要将Q抹掉
+		}
+	}
+}
+
+vector<vector<string>> solveNQueens(int n) {
+	vector<vector<string>> res;
+	vector<string> temp(n);
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			temp[i] += '.';
+		}
+	}
+	backtracking(res, temp, n, 0);
+
+	return res;
+}
+};

@@ -1,0 +1,50 @@
+//Jun/24/2018 ac 5ms beats 87%
+//进行了优化，取消了判断函数，改用三个数组进行判断，对于在同一对角线应满足两个条件中的一个，1.row - col相同（由于可能有负数，加上了一个n，确保结果为正）
+//2.row + col 相同，以此可以直接查找数组来判断当前放置是否合法
+
+class Solution {
+public:
+    void backtracking(vector<vector<string>>& res, vector<string>& temp, int n, int layer, vector<bool>& row, vector<bool>& leftup, vector<bool>& rightup)
+{
+	if (layer == n)
+	{
+		res.push_back(temp);
+		return;
+	}
+	
+	//int flag = 1;
+	for (int i = 0; i < n; i++)
+	{
+		if (!row[i] && !leftup[layer - i + n] && !rightup[layer + i])
+		{
+			temp[layer][i] = 'Q';
+			row[i] = 1;
+			leftup[layer - i + n] = 1;
+			rightup[layer + i] = 1;
+			backtracking(res, temp, n, layer + 1, row, leftup, rightup);
+			row[i] = 0;
+			leftup[layer - i + n] = 0;
+			rightup[layer + i] = 0;
+			temp[layer][i] = '.';
+		}
+	}
+}
+
+vector<vector<string>> solveNQueens(int n) {
+	vector<vector<string>> res;
+	vector<string> temp(n);
+	vector<bool> row(n, 0);
+	vector<bool> leftup(2*n,0);
+	vector<bool> rightup(2*n, 0);
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			temp[i] += '.';
+		}
+	}
+	backtracking(res, temp, n, 0, row, leftup, rightup);
+
+	return res;
+}
+};

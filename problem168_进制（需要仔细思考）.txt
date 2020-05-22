@@ -1,0 +1,37 @@
+//很简单的一道题，但是也需要转一个弯
+//由于是从A到Z 到 AA，是一个没有0 的27进制
+//即，（0）1。。。26，（10）， 11 。。。
+//所以每次除我们都减一再除，减一以后当作26进制来找到当前位
+//同时也需要减一再除来找到去除这一位之后的数
+
+class Solution {
+public:
+    string strReverse(string s){
+        if(s.size() <= 1){
+            return s;
+        }
+        
+        string result = s;
+        int len = s.size();
+        
+        for(int i = 0; i < s.size(); i++){
+            result[i] = s[len - 1 - i];
+        }
+        
+        return result;
+    }
+    
+    string convertToTitle(int n) {
+        string result;
+        
+        while(n > 0){
+            int digit =  (n - 1) % 26;
+            
+            result += (digit + 'A');
+            
+            n = (n - 1) / 26;
+        } 
+        
+       return strReverse(result);
+    }
+};

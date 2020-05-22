@@ -1,0 +1,58 @@
+//Jun/23/2018 ac 12ms beats 50%
+//如果直接讲一个数乘n次，在n非常大的时候，效率很低
+//所以采用类似二分的做法来让效率达到O（log（n））
+//具体的方法是，用一个数字（fn）记录当前的乘方数，不断乘2来快速逼近n，当fn*2>n时，将n->n-fn，fn->1,res = 2重新开始记录
+//这里需要注意，将fn*2 == n的情况特殊考虑，直接返回res*res。因为如果不这么做的话，如果n是INT_min，如果fn多循环一次，就会越界（因为我用的是unsigned类型）
+
+//举个例子，计算2的5次方
+//传入的时候，x = 2，res = 2， fn = 1， n = 5
+//第一次递归，fn << 1 < n, 传入第二次递归，x = 2，res = 4, fn = 2, n =5
+//进入第二次递归 fn << 1 < n, 传入第三次递归， x = 2， res = 8， fn = 4， n = 5
+//进入第三次递归 fn << 2 > n，传入第四次递归， x = 2， res = 2， fn = 1， n = 1；（返回值为res*countPow（），这样后面计算结束后会乘上当前的结果， res为16）
+//进入第四次递归 fn << 2 > n, 传入第五次递归， x = 2， res = 2， fn = 1， n = 0；（返回值为res*countPow（），这样后面计算结束后会乘上当前的结果， res为2）
+//进入第五次递归 n == 0； 返回 1. 于是最后的返回值就是 1 * 2 * 16 = 32；
+
+class Solution {
+public:
+    double countPow(double x, double res, unsigned fn, unsigned n)
+{
+	if (n == 0)
+	{
+		return 1;
+	}
+	
+	if (fn << 1 == n)
+	{
+		return res * res;
+	}
+	else if ((fn << 1) < n)
+	{
+		fn = fn << 1;
+		return countPow(x,res*res, fn, n);
+	}
+	else
+	{
+		//fn >> 1;
+		return res * countPow(x, x, 1, n - fn);
+	}
+}
+
+double myPow(double x, int n) {
+	if (n == 0 || x == 1)
+	{
+		return 1;
+	}
+	if (x == 0)
+	{
+		return 0;
+	}
+	unsigned n_pos = abs(n);
+	double res = countPow(x,x,1,n_pos);
+	if (n < 0)
+	{
+		res = 1 / res;
+	}
+	
+	return res;
+}
+};
